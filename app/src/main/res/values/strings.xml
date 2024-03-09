@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FlagGuesse-final</string>
+    <string name="title_activity_guess">GuessActivity</string>
+    <string name="title_activity_data">Data</string>
 </resources>

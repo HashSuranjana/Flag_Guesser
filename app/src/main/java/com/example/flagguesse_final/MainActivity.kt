@@ -1,5 +1,6 @@
 package com.example.flagguesse_final
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,7 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
+import java.time.format.TextStyle
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +44,7 @@ class MainActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceBetween){
 
-                        Text("Flag Guesser")
+                        Mytext(text = "Flag Guesser")
                         MyButtons()
 
                     }
@@ -49,66 +52,78 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
 
-@Composable
-fun Mytext(text:String){
-    Text(text = text)
-}
-
-@Composable
-fun MyButtons(){
-    Column (modifier = Modifier
-        .height(150.dp)
-        .width(500.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround){
-
-        Row(modifier = Modifier.width(300.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-            ) {
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "Guess Country")
-
-            }
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "Guess-Hints")
-
-            }
-        }
-
-        Row (modifier = Modifier.width(300.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "Guess Flag")
-
-            }
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "Advance-Level")
-
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    FlagGuessefinalTheme {
-        Column (modifier= Modifier
-            .fillMaxSize()
-            .background(color = Color.LightGray)
-            .padding(40.dp),
+    @Composable
+    fun MyButtons(){
+        Column (modifier = Modifier
+            .height(150.dp)
+            .width(500.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween){
+            verticalArrangement = Arrangement.SpaceAround){
 
-            Text("Flag Guesser")
-            MyButtons()
+            Row(modifier = Modifier.width(300.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(onClick = {
+                    var intent = Intent(this@MainActivity, GuessActivity::class.java)
+                    startActivity(intent)}) {
+                    Text(text = "Guess Country")
+
+                }
+                Button(onClick = {
+
+                }) {
+                    Text(text = "Guess-Hints")
+
+                }
+            }
+
+            Row (modifier = Modifier.width(300.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(onClick = { /*TODO*/ }) {
+                    Text(text = "Guess Flag")
+
+                }
+                Button(onClick = { /*TODO*/ }) {
+                    Text(text = "Advance-Level")
+
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun Mytext(text:String){
+        Text(text = text,
+            style= androidx.compose.ui.text.TextStyle(fontSize = 33.sp,
+                color = Color.Red
+            ))
+    }
+
+
+
+
+
+    @Preview(showBackground = true)
+    @Composable
+    fun DefaultPreview() {
+        FlagGuessefinalTheme {
+            Column (modifier= Modifier
+                .fillMaxSize()
+                .background(color = Color.LightGray)
+                .padding(40.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween){
+
+                Mytext(text = "Flag Guesser")
+                MyButtons()
+
+            }
 
         }
-
     }
 }
+
