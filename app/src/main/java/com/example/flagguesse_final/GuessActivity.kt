@@ -20,9 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
@@ -90,71 +92,81 @@ class GuessActivity: ComponentActivity() {
 @Composable
 fun RandomFlag() {
 
-    val countryCodes =
-        rememberSaveable { Data().countryCodes } // Get the list of country codes from the Data class
+    val countryCodes = remember { Data().countryCodes } // Get the list of country codes from the Data class
 
-    val countryFlags =
-        rememberSaveable { Data().countryFlags } // Get the map of country flags from the Data class
+    val countryFlags = remember{ Data().countryFlags } // Get the map of country flags from the Data class
 
-    val randomCountryCode =
-        rememberSaveable { countryCodes.random() } // Randomly select a country code
+    val countryNameMap = remember { Data().country_names } // Get the map of the country names from the Data class
 
-    val flagResourceId = countryFlags[randomCountryCode]
-        ?: R.drawable.ad  // Get the corresponding flag for the selected country code
+    val countryNames = countryNameMap.values.toList()  //Get the values of the map country_name and convert into a list
 
-    val namelist = Data().countryNames
-
-    var expanded by rememberSaveable { mutableStateOf(false)}
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
     var selectedItem by rememberSaveable { mutableStateOf("Select Country") }
 
-    // Display the selected flag
+    val randomCountryCode = rememberSaveable { countryCodes.random() } // Randomly select a country code
+
+    val correctCountryName = rememberSaveable { countryNameMap[randomCountryCode] ?: "" } // Get the correct country name for the selected flag
+
+    var isAnswered by remember { mutableStateOf(false) }
+
     Column(modifier = Modifier
         .fillMaxSize()
-        .padding(20.dp)) {
+        .background(Color.Gray),
+        horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             modifier = Modifier
+                .offset(y = 100.dp)
                 .fillMaxWidth()
-                .background(color = Color.Red),
+                .background(color = Color.Cyan),
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(id = flagResourceId),
+                painter = painterResource(id = countryFlags[randomCountryCode] ?: R.drawable.ad),
                 contentDescription = null
             )
         }
 
-        Column (modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-            verticalArrangement = Arrangement.Center){
+        ExposedDropdownMenuBox(modifier = Modifier.offset(y=150.dp),
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }) {
+            TextField(
+                modifier = Modifier.menuAnchor(),
+                value = selectedItem,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
+            )
 
-            ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = {expanded =!expanded} ) {
-
-                TextField(modifier = Modifier.menuAnchor(),
-                    value = selectedItem,
-                    onValueChange = {},
-                    readOnly = true,
-                    trailingIcon = {ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)}
-                )
-
-                ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false}) {
-
-                    namelist.forEachIndexed{ index,text ->
-                        DropdownMenuItem(
-                            text = { Text(text = text) },
-                            onClick = {
-                                selectedItem = namelist[index]
-                                expanded = false},
-                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding)
-                    }
-
+            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                countryNames.forEachIndexed { index, text ->
+                    DropdownMenuItem(
+                        text = { Text(text = text) },
+                        onClick = {
+                            selectedItem = countryNames[index]
+                            expanded = false
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                    )
                 }
-
             }
 
+            Button(
+                modifier = Modifier
+                    .offset(x = 40.dp, y = 200.dp)
+                    .width(200.dp),
+                onClick = {
+                    if (!isAnswered) {
+                        val isCorrect = selectedItem == correctCountryName
+                        val resultText = if (isCorrect) "Correct!" else "Wrong! The correct country name is: $correctCountryName"
+                        selectedItem = resultText
+                        isAnswered = true
+                    }
+                }
+            ) {
+                Text(text = if (isAnswered) "Answered" else "Submit")
+            }
         }
-
     }
 }
 
