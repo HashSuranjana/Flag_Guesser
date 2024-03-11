@@ -55,17 +55,24 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun MyButtons(){
-        Column (modifier = Modifier
+
+        Column (
+
+            modifier = Modifier
             .height(150.dp)
             .width(500.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround){
 
-            Row(modifier = Modifier.width(300.dp),
+            Row(
+
+                modifier = Modifier.width(300.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
+
             ) {
                 Button(onClick = {
+
                     var intent = Intent(this@MainActivity, GuessActivity::class.java)
                     startActivity(intent)}) {
                     Text(text = "Guess Country")
@@ -73,23 +80,34 @@ class MainActivity : ComponentActivity() {
                 }
                 Button(onClick = {
 
+                    var i = Intent(this@MainActivity,HintActivity::class.java)
+                    startActivity(i)
+
                 }) {
                     Text(text = "Guess-Hints")
 
                 }
             }
 
-            Row (modifier = Modifier.width(300.dp),
+            Row (
+                modifier = Modifier.width(300.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
+
             ) {
+
                 Button(onClick = {
+
                     var i = Intent(this@MainActivity,GuessFlagActivity::class.java)
                     startActivity(i) }) {
                     Text(text = "Guess Flag")
 
                 }
-                Button(onClick = { /*TODO*/ }) {
+
+                Button(onClick = {
+
+                    var i = Intent(this@MainActivity,AdvanceActivity::class.java)
+                    startActivity(i) }) {
                     Text(text = "Advance-Level")
 
                 }

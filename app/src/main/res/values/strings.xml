@@ -3,4 +3,6 @@
     <string name="title_activity_guess">GuessActivity</string>
     <string name="title_activity_data">Data</string>
     <string name="title_activity_guess_flag">GuessFlagActivity</string>
+    <string name="title_activity_hint">HintActivity</string>
+    <string name="title_activity_advance">AdvanceActivity</string>
 </resources>
