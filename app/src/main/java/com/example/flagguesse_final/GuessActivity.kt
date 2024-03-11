@@ -33,10 +33,14 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.Size
@@ -82,6 +86,7 @@ class GuessActivity: ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RandomFlag() {
 
@@ -97,24 +102,11 @@ fun RandomFlag() {
     val flagResourceId = countryFlags[randomCountryCode]
         ?: R.drawable.ad  // Get the corresponding flag for the selected country code
 
+    val namelist = Data().countryNames
 
-    val countryNames = rememberSaveable { Data().country_names } // Get the list of country names from the Data class
+    var expanded by rememberSaveable { mutableStateOf(false)}
 
-    var expanded by remember { mutableStateOf(false) } // State to hold the dropdown menu visibility
-
-    var namelist = listOf("Hello","World")
-
-    var selectedItem by rememberSaveable { mutableStateOf("") }
-
-    var textFiledSize by rememberSaveable { mutableStateOf(Size.Zero)}
-
-    val icon  = if (expanded){
-        Icons.Filled.KeyboardArrowUp
-    }else{
-        Icons.Filled.KeyboardArrowDown
-    }
-
-
+    var selectedItem by rememberSaveable { mutableStateOf("Select Country") }
 
     // Display the selected flag
     Column(modifier = Modifier
@@ -132,39 +124,40 @@ fun RandomFlag() {
             )
         }
 
-        Box(modifier = Modifier.fillMaxWidth() ){
+        Column (modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+            verticalArrangement = Arrangement.Center){
 
-            Column {
-                OutlinedTextField(value = selectedItem, onValueChange = {selectedItem = it},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onGloballyPositioned { coordinates ->
-                            textFiledSize = coordinates.size.toSize()
-                        },
-                    label = { Text(text = "Select")}, trailingIcon = {
-                        Icon(icon,"",Modifier.clickable { expanded !=expanded })
-                    })
+            ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = {expanded =!expanded} ) {
 
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier.width(with(LocalDensity.current) { textFiledSize.width.toDp() })
-                ) {
-                    namelist.forEach { label ->
-                        DropdownMenuItem(text ={Text(label)}, onClick = {
-                            selectedItem = label
-                            expanded = false
-                        })
+                TextField(modifier = Modifier.menuAnchor(),
+                    value = selectedItem,
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = {ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)}
+                )
+
+                ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false}) {
+
+                    namelist.forEachIndexed{ index,text ->
+                        DropdownMenuItem(
+                            text = { Text(text = text) },
+                            onClick = {
+                                selectedItem = namelist[index]
+                                expanded = false},
+                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding)
                     }
+
                 }
 
             }
-
 
         }
 
     }
 }
+
 
 
 
