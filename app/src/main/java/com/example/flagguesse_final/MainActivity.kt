@@ -83,7 +83,9 @@ class MainActivity : ComponentActivity() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = {
+                    var i = Intent(this@MainActivity,GuessFlagActivity::class.java)
+                    startActivity(i) }) {
                     Text(text = "Guess Flag")
 
                 }

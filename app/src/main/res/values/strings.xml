@@ -2,4 +2,5 @@
     <string name="app_name">FlagGuesse-final</string>
     <string name="title_activity_guess">GuessActivity</string>
     <string name="title_activity_data">Data</string>
+    <string name="title_activity_guess_flag">GuessFlagActivity</string>
 </resources>

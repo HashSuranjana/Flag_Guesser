@@ -1,60 +1,43 @@
 package com.example.flagguesse_final
 
-import android.content.Intent
-import android.graphics.drawable.Icon
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
-import kotlin.random.Random
-
+import androidx.compose.ui.unit.sp
+import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
 
 
 class GuessActivity: ComponentActivity() {
@@ -110,6 +93,8 @@ fun RandomFlag() {
 
     var isAnswered by remember { mutableStateOf(false) }
 
+    var message by rememberSaveable { mutableStateOf("") }
+
     Column(modifier = Modifier
         .fillMaxSize()
         .background(Color.Gray),
@@ -150,25 +135,54 @@ fun RandomFlag() {
                     )
                 }
             }
+        }
 
-            Button(
-                modifier = Modifier
-                    .offset(x = 40.dp, y = 200.dp)
-                    .width(200.dp),
-                onClick = {
-                    if (!isAnswered) {
-                        val isCorrect = selectedItem == correctCountryName
-                        val resultText = if (isCorrect) "Correct!" else "Wrong! The correct country name is: $correctCountryName"
-                        selectedItem = resultText
-                        isAnswered = true
-                    }
+        Button(
+            modifier = Modifier
+                .offset(y =450.dp)
+                .width(200.dp),
+
+            onClick = {
+                if (!isAnswered) {
+                    val isCorrect = selectedItem == correctCountryName
+                    message = if (isCorrect) "Correct! You Guess It." else "Wrong! The correct country name is: $correctCountryName"
+                    isAnswered = true
                 }
-            ) {
-                Text(text = if (isAnswered) "Answered" else "Submit")
+            }
+        ) {
+            Text(text = if (isAnswered) "Next" else "Submit")
+        }
+
+
+        // Display the correct or incorrect message
+
+        val correctPartColor = if (message.startsWith("Correct")) Color.Green else Color.Red
+        val incorrectPartColor = Color.Blue
+
+        val correctPart = message.substringBefore(":").trim()
+        val incorrectPart = message.substringAfter(":").trim()
+
+        Row(modifier = Modifier.padding(16.dp).height(70.dp).offset(y=200.dp)) {
+            Text(
+                text = correctPart,
+                color = correctPartColor,
+                modifier = Modifier.padding(end = 4.dp),
+                style = TextStyle(fontSize = 20.sp)
+            )
+            if (message.startsWith("Wrong")) {
+                Text(
+                    text = incorrectPart,
+                    color = incorrectPartColor,
+                    style = TextStyle(fontSize = 20.sp)
+                )
             }
         }
     }
 }
+
+
+
+
 
 
 
