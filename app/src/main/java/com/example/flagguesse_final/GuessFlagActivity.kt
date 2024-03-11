@@ -18,6 +18,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,17 +36,61 @@ class GuessFlagActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    GuessFlagGame()
 
                 }
             }
         }
     }
-}
+    @Preview(showBackground = true)
+    @Composable
+    fun DefaultPreview() {
+        FlagGuessefinalTheme {
+            GuessFlagGame()
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FlagGuessefinalTheme {
-
+        }
     }
 }
+
+
+
+@Composable
+fun GuessFlagGame() {
+
+    val flagIds = remember { Data().countryFlags.values.toList() } // Get all flags' images as a list
+
+    var countryCode = rememberSaveable { Data().countryCodes.random() } //Get a random country code from the CountryCodes
+
+    var countryName = rememberSaveable {Data().country_names[countryCode]?: "Unknown"}  // Get the relevant country name for that country Code
+    
+    var countryflag = rememberSaveable {Data().countryFlags[countryCode]?: R.drawable.ad} // Get the relevant Flag image for that country Code
+
+
+    val excludedFlag = flagIds.indexOf(countryflag) // Find the index of the current flag
+
+    val remainingFlags = flagIds.filterIndexed { index, _ -> index != excludedFlag } // Exclude the current flag
+
+    val randomFlags = remember { remainingFlags.shuffled().take(2) } // Randomly select two flags from the remaining list
+
+
+
+
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally){
+
+        Text(text = countryName)
+
+        Image(painter = painterResource(id = countryflag), contentDescription = null)
+
+        Image(painter = painterResource(id = randomFlags[0]), contentDescription = null)
+        Image(painter = painterResource(id = randomFlags[1]), contentDescription = null)
+    }
+
+    
+
+
+}
+
