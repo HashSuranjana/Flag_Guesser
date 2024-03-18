@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,11 +90,11 @@ fun RandomFlag() {
 
     var selectedItem by rememberSaveable { mutableStateOf("Select Country") }
 
-    val randomCountryCode = rememberSaveable { countryCodes.random() } // Randomly select a country code
+    var randomCountryCode by rememberSaveable { mutableStateOf(countryCodes.random()) }
 
-    val correctCountryName = rememberSaveable { countryNameMap[randomCountryCode] ?: "" } // Get the correct country name for the selected flag
+    var correctCountryName by rememberSaveable { mutableStateOf(countryNameMap[randomCountryCode] ?: "") }
 
-    var isAnswered by remember { mutableStateOf(false) }
+    var isAnswered by rememberSaveable { mutableStateOf(false) }
 
     var message by rememberSaveable { mutableStateOf("") }
 
@@ -99,6 +102,11 @@ fun RandomFlag() {
         .fillMaxSize()
         .background(Color.Gray),
         horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Text(text = "Guess The Country",
+            style = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 20.sp),
+            modifier = Modifier.offset(y= 50.dp)
+        )
         Box(
             modifier = Modifier
                 .offset(y = 100.dp)
@@ -139,14 +147,21 @@ fun RandomFlag() {
 
         Button(
             modifier = Modifier
-                .offset(y =450.dp)
+                .offset(y = 400.dp)
                 .width(200.dp),
 
             onClick = {
-                if (!isAnswered) {
+                if (!isAnswered && selectedItem != "Select Country") {
                     val isCorrect = selectedItem == correctCountryName
-                    message = if (isCorrect) "Correct! You Guess It." else "Wrong! The correct country name is: $correctCountryName"
+                    message = if (isCorrect) "Correct! You Guessed It." else "Wrong! Country is: $correctCountryName"
                     isAnswered = true
+                } else if (isAnswered) {
+                    // Reset variables for the next round
+                    isAnswered = false
+                    message = ""
+                    selectedItem = "Select Country"
+                    randomCountryCode = countryCodes.random()
+                    correctCountryName = countryNameMap[randomCountryCode] ?: ""
                 }
             }
         ) {
@@ -162,7 +177,10 @@ fun RandomFlag() {
         val correctPart = message.substringBefore(":").trim()
         val incorrectPart = message.substringAfter(":").trim()
 
-        Row(modifier = Modifier.padding(16.dp).height(70.dp).offset(y=200.dp)) {
+        Row(modifier = Modifier
+            .padding(16.dp)
+            .height(70.dp)
+            .offset(y = 200.dp)) {
             Text(
                 text = correctPart,
                 color = correctPartColor,
