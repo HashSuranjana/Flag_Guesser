@@ -1,11 +1,8 @@
 package com.example.flagguesse_final
 
-import android.content.Context
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.contextaware.ContextAware
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -30,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -53,23 +50,19 @@ class GuessFlagActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     GuessFlagGame()
-
                 }
             }
         }
     }
-
 }
+
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     FlagGuessefinalTheme {
         GuessFlagGame()
-
     }
 }
-
-
 
 @Composable
 fun GuessFlagGame() {
@@ -79,11 +72,13 @@ fun GuessFlagGame() {
     var countryName by rememberSaveable { mutableStateOf(Data().country_names[countryCode] ?: "Unknown") }
     var countryflag by rememberSaveable { mutableStateOf(Data().countryFlags[countryCode] ?: R.drawable.ad) }
 
+    var selectedFlagIndex by remember { mutableStateOf<Int?>(null) }
+
+    var shuffledFlags by remember { mutableStateOf(listOf<Int>()) }
+
     val flagIds = remember { Data().countryFlags.values.toList() }
 
     val remainingFlags = remember { flagIds.filterNot { it == countryflag } }
-
-    val shuffledFlags = remember { (remainingFlags.shuffled().take(2) + countryflag).shuffled() }
 
     Column(
         modifier = Modifier
@@ -98,38 +93,32 @@ fun GuessFlagGame() {
             style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
         )
 
+        if (shuffledFlags.isEmpty()) {
+            shuffledFlags = (remainingFlags.shuffled().take(2) + countryflag).shuffled()
+        }
+
         shuffledFlags.forEachIndexed { index, flagResourceId ->
-            val boxColor = if (isCorrect != null && index == 2 && isCorrect!!) Color.Green else if (isCorrect != null && index == 2 && !isCorrect!!) Color.Red else Color.Gray
+            val isSelected = selectedFlagIndex == index
+            val boxColor = if (isCorrect != null && index == 2 && isCorrect!!) Color.Green else if (isCorrect != null && index == 2 && !isCorrect!!) Color.Red else if (isSelected) Color.Blue else Color.Gray
             Box(
                 modifier = Modifier
-                    .width(160.dp)
-                    .height(130.dp)
+                    .size(200.dp)
+                    .padding(4.dp)
+                    .background(color = boxColor, shape = RoundedCornerShape(16.dp)) // Rounded corners
                     .clickable {
                         if (!isSubmitted) {
-                            val selectedCountryCode = Data().countryCodes.find { code ->
-                                Data().countryFlags[code] == flagResourceId
-                            }
-                            if (selectedCountryCode == countryCode) {
-                                isCorrect = true
-                            } else {
-                                isCorrect = false
-                            }
-                            isSubmitted = true
+                            selectedFlagIndex = index
                         }
                     },
                 contentAlignment = Alignment.Center,
                 content = {
-                    Box(
+                    Image(
+                        painter = painterResource(id = flagResourceId),
+                        contentDescription = null,
                         modifier = Modifier
-                            .size(200.dp)
-                            .padding(4.dp)
-                            .background(color = boxColor)
-                    ) {
-                        Image(
-                            painter = painterResource(id = flagResourceId),
-                            contentDescription = null
-                        )
-                    }
+                            .fillMaxSize()
+                            .padding(8.dp) // Add padding to provide space from left and right
+                    )
                 }
             )
         }
@@ -151,6 +140,8 @@ fun GuessFlagGame() {
                     countryCode = Data().countryCodes.random()
                     countryName = Data().country_names[countryCode] ?: "Unknown"
                     countryflag = Data().countryFlags[countryCode] ?: R.drawable.ad
+                    selectedFlagIndex = null
+                    shuffledFlags = emptyList() // Clear shuffledFlags to regenerate on next render
                 }
             ) {
                 Text(text = "Next")
@@ -158,24 +149,21 @@ fun GuessFlagGame() {
         } else {
             Button(
                 onClick = {
-                    isSubmitted = true
-                    val selectedCountryCode = Data().countryCodes.find { code ->
-                        Data().countryFlags[code] == shuffledFlags[2]
+                    if (selectedFlagIndex != null) {
+                        isSubmitted = true
+                        val selectedCountryCode = Data().countryCodes.find { code ->
+                            Data().countryFlags[code] == shuffledFlags[selectedFlagIndex!!]
+                        }
+                        isCorrect = selectedCountryCode == countryCode
                     }
-                    isCorrect = selectedCountryCode == countryCode
-                }
+                },
+                enabled = selectedFlagIndex != null
             ) {
                 Text(text = "Submit")
             }
         }
     }
 }
-
-
-
-
-
-
 
 
 
