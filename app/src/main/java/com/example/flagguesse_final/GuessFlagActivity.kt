@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -28,14 +26,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
 
 class GuessFlagActivity : ComponentActivity() {
@@ -46,10 +42,10 @@ class GuessFlagActivity : ComponentActivity() {
             FlagGuessefinalTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), // Fill the entire size of the screen
+                    color = MaterialTheme.colorScheme.background // Set the background color from the theme
                 ) {
-                    GuessFlagGame()
+                    GuessFlagGame() // Call the GuessFlagGame composable
                 }
             }
         }
@@ -60,111 +56,107 @@ class GuessFlagActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     FlagGuessefinalTheme {
-        GuessFlagGame()
+        GuessFlagGame() // Call the GuessFlagGame composable
     }
 }
 
 @Composable
 fun GuessFlagGame() {
-    var isSubmitted by rememberSaveable { mutableStateOf(false) }
-    var isCorrect by rememberSaveable { mutableStateOf<Boolean?>(null) }
-    var countryCode by rememberSaveable { mutableStateOf(Data().countryCodes.random()) }
-    var countryName by rememberSaveable { mutableStateOf(Data().country_names[countryCode] ?: "Unknown") }
-    var countryflag by rememberSaveable { mutableStateOf(Data().countryFlags[countryCode] ?: R.drawable.ad) }
+    var isSubmitted by rememberSaveable { mutableStateOf(false) } // State for tracking if the guess is submitted
+    var isCorrect by rememberSaveable { mutableStateOf<Boolean?>(null) } // State for tracking if the guess is correct
+    var countryCode by rememberSaveable { mutableStateOf(Data().countryCodes.random()) } // State for storing the randomly selected country code
+    var countryName by rememberSaveable { mutableStateOf(Data().country_names[countryCode] ?: "Unknown") } // State for storing the country name corresponding to the country code
+    var countryflag by rememberSaveable { mutableStateOf(Data().countryFlags[countryCode] ?: R.drawable.ad) } // State for storing the flag image resource id
 
-    var selectedFlagIndex by remember { mutableStateOf<Int?>(null) }
+    var selectedFlagIndex by remember { mutableStateOf<Int?>(null) } // State for tracking the index of the selected flag
 
-    var shuffledFlags by remember { mutableStateOf(listOf<Int>()) }
+    var shuffledFlags by remember { mutableStateOf(listOf<Int>()) } // State for storing shuffled flag images
 
-    val flagIds = remember { Data().countryFlags.values.toList() }
+    val flagIds = remember { Data().countryFlags.values.toList() } // List of all flag image resource ids
 
-    val remainingFlags = remember { flagIds.filterNot { it == countryflag } }
+    val remainingFlags = remember { flagIds.filterNot { it == countryflag } } // List of remaining flag image resource ids
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
+            .fillMaxSize() // Fill the entire size of the parent
+            .padding(16.dp), // Add padding around the column
+        horizontalAlignment = Alignment.CenterHorizontally, // Align content horizontally to the center
+        verticalArrangement = Arrangement.SpaceAround // Arrange content vertically with equal space around
     ) {
 
         Text(
-            text = countryName,
-            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            text = countryName, // Display the country name
+            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold) // Define text style
         )
 
-        if (shuffledFlags.isEmpty()) {
-            shuffledFlags = (remainingFlags.shuffled().take(2) + countryflag).shuffled()
+        if (shuffledFlags.isEmpty()) { // Check if shuffled flags list is empty
+            shuffledFlags = (remainingFlags.shuffled().take(2) + countryflag).shuffled() // Shuffle remaining flags and add current flag
         }
 
-        shuffledFlags.forEachIndexed { index, flagResourceId ->
-            val isSelected = selectedFlagIndex == index
-            val boxColor = if (isCorrect != null && index == 2 && isCorrect!!) Color.Green else if (isCorrect != null && index == 2 && !isCorrect!!) Color.Red else if (isSelected) Color.Blue else Color.Gray
+        shuffledFlags.forEachIndexed { index, flagResourceId -> // Iterate through shuffled flags
+            val isSelected = selectedFlagIndex == index // Check if current flag is selected
+            val boxColor = if (isCorrect != null && index == 2 && isCorrect!!) Color.Green else if (isCorrect != null && index == 2 && !isCorrect!!) Color.Red else if (isSelected) Color.Blue else Color.Gray // Define box color based on correctness and selection
             Box(
                 modifier = Modifier
-                    .size(200.dp)
-                    .padding(4.dp)
-                    .background(color = boxColor, shape = RoundedCornerShape(16.dp)) // Rounded corners
+                    .size(200.dp) // Set the size of the box
+                    .padding(4.dp) // Add padding around the box
+                    .background(color = boxColor, shape = RoundedCornerShape(16.dp)) // Set background color and rounded corners
                     .clickable {
-                        if (!isSubmitted) {
-                            selectedFlagIndex = index
+                        if (!isSubmitted) { // Check if guess is not submitted
+                            selectedFlagIndex = index // Set the selected flag index
                         }
                     },
-                contentAlignment = Alignment.Center,
+                contentAlignment = Alignment.Center, // Align content inside the box to the center
                 content = {
                     Image(
-                        painter = painterResource(id = flagResourceId),
-                        contentDescription = null,
+                        painter = painterResource(id = flagResourceId), // Load flag image
+                        contentDescription = null, // No content description
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(8.dp) // Add padding to provide space from left and right
+                            .fillMaxSize() // Fill the entire size of the parent
+                            .padding(8.dp) // Add padding inside the box
                     )
                 }
             )
         }
 
-        if (isSubmitted) {
-            val resultText = if (isCorrect == true) "CORRECT!" else "WRONG!"
+        if (isSubmitted) { // Check if guess is submitted
+            val resultText = if (isCorrect == true) "CORRECT!" else "WRONG!" // Define result text
             Text(
-                text = resultText,
-                color = if (isCorrect == true) Color.Green else Color.Red,
-                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                text = resultText, // Display result text
+                color = if (isCorrect == true) Color.Green else Color.Red, // Set text color based on correctness
+                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold) // Define text style
             )
         }
 
-        if (isSubmitted) {
+        if (isSubmitted) { // Check if guess is submitted
             Button(
                 onClick = {
-                    isSubmitted = false
-                    isCorrect = null
-                    countryCode = Data().countryCodes.random()
-                    countryName = Data().country_names[countryCode] ?: "Unknown"
-                    countryflag = Data().countryFlags[countryCode] ?: R.drawable.ad
-                    selectedFlagIndex = null
-                    shuffledFlags = emptyList() // Clear shuffledFlags to regenerate on next render
+                    isSubmitted = false // Reset submitted state
+                    isCorrect = null // Reset correctness state
+                    countryCode = Data().countryCodes.random() // Select a new random country code
+                    countryName = Data().country_names[countryCode] ?: "Unknown" // Get the country name corresponding to the country code
+                    countryflag = Data().countryFlags[countryCode] ?: R.drawable.ad // Get the flag image resource id
+                    selectedFlagIndex = null // Reset selected flag index
+                    shuffledFlags = emptyList() // Clear shuffled flags list
                 }
             ) {
-                Text(text = "Next")
+                Text(text = "Next") // Display "Next" button
             }
         } else {
             Button(
                 onClick = {
-                    if (selectedFlagIndex != null) {
-                        isSubmitted = true
-                        val selectedCountryCode = Data().countryCodes.find { code ->
+                    if (selectedFlagIndex != null) { // Check if a flag is selected
+                        isSubmitted = true // Set submitted state
+                        val selectedCountryCode = Data().countryCodes.find { code -> // Find country code corresponding to selected flag
                             Data().countryFlags[code] == shuffledFlags[selectedFlagIndex!!]
                         }
-                        isCorrect = selectedCountryCode == countryCode
+                        isCorrect = selectedCountryCode == countryCode // Check if selected country code matches current country code
                     }
                 },
-                enabled = selectedFlagIndex != null
+                enabled = selectedFlagIndex != null // Enable button if a flag is selected
             ) {
-                Text(text = "Submit")
+                Text(text = "Submit") // Display "Submit" button
             }
         }
     }
 }
-
-
-
-
