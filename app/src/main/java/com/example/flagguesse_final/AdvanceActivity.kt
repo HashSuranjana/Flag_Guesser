@@ -1,14 +1,11 @@
 package com.example.flagguesse_final
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -17,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.flagguesse_final.Data
@@ -28,7 +26,6 @@ class AdvanceActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             FlagGuessefinalTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -47,56 +44,76 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
     val countryFlags = remember { countryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad } }
     val countryNames = remember { mutableStateListOf("", "", "") }
 
+    var attempts by remember { mutableStateOf(0) }
+    var correctAttempts by remember { mutableStateOf(0) }
     var submitted by remember { mutableStateOf(false) }
-    var correct by remember { mutableStateOf(false) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize().padding(16.dp)
+        modifier = Modifier.fillMaxSize().padding(4.dp)
     ) {
-        // Display the flag images and text boxes for user input
         countryCodes.forEachIndexed { index, countryCode ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 2.dp)
             ) {
                 Image(
                     painter = painterResource(id = countryFlags[index]),
                     contentDescription = null,
-                    modifier = Modifier.size(200.dp)
+                    modifier = Modifier.size(50.dp)
                 )
-                if (!submitted || (submitted && !correct)) {
-                    OutlinedTextField(
-                        value = countryNames[index],
-                        onValueChange = {
-                            if (!submitted || (submitted && !correct)) {
-                                countryNames[index] = it
-                                correct = false
-                            }
-                        },
-                        label = { Text("Type the name of the flag") },
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-                } else {
-                    Text(
-                        text = countryNames[index],
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
+
+                val isEditable = !submitted || (submitted && attempts < 3)
+                val isCorrect = countryNames[index] == Data().country_names[countryCode]
+                val backgroundColor = when {
+                    submitted && isCorrect -> Color.Green
+                    submitted && !isCorrect -> Color.Red
+                    else -> Color.Transparent
                 }
+
+                OutlinedTextField(
+                    value = countryNames[index],
+                    onValueChange = {
+                        if (isEditable) {
+                            countryNames[index] = it
+                        }
+                    },
+                    label = { Text("Type Country Name") },
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .width(200.dp)
+                        .background(color = backgroundColor),
+                    enabled = isEditable
+                )
             }
         }
 
-        // Submit button
         Button(
             onClick = {
-                val correctNames = countryCodes.map { code -> Data().country_names[code] }
-                submitted = true
-                correct = countryNames == correctNames
+                if (!submitted) {
+                    submitted = true
+                    attempts++
+                    correctAttempts = countryNames.countIndexed { index, name ->
+                        name == Data().country_names[countryCodes[index]]
+                    }
+                } else {
+                    attempts++
+                }
             },
-            enabled = !submitted || (submitted && !correct),
-            modifier = Modifier.fillMaxWidth()
+            enabled = !submitted || attempts < 3,
+            modifier = Modifier.width(100.dp)
         ) {
-            Text(if (submitted) "Submitted" else "Submit")
+            Text(if (correctAttempts == 3 || attempts == 3) "Next" else "Submit")
         }
     }
+}
+
+inline fun <T> Iterable<T>.countIndexed(predicate: (Int, T) -> Boolean): Int {
+    var count = 0
+    for ((index, element) in this.withIndex()) {
+        if (predicate(index, element)) {
+            count++
+        }
+    }
+    return count
 }
