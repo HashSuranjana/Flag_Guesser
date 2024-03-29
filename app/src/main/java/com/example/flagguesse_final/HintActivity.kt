@@ -43,12 +43,15 @@ fun Hint() {
     val countryCodes = remember { Data().countryCodes }
     val countryFlags = remember { Data().countryFlags }
     val countryNameMap = remember { Data().country_names }
-    val randomCountryCode by remember { mutableStateOf(countryCodes.random()) }
-    val correctCountryName = countryNameMap[randomCountryCode] ?: ""
+
+    var randomCountryCode by remember { mutableStateOf(countryCodes.random()) }
+    var correctCountryName by remember { mutableStateOf(countryNameMap[randomCountryCode] ?: "") }
 
     var guessedLetters by remember { mutableStateOf(List(correctCountryName.length) { "" }) }
     var userInput by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
+    var incorrectGuesses by remember { mutableStateOf(0) }
+    var showNextButton by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -90,27 +93,42 @@ fun Hint() {
         )
         Button(
             onClick = {
-                if (userInput.length == 1) {
-                    val inputLower = userInput.lowercase() // Convert input to lowercase
-                    val nameLower = correctCountryName.lowercase() // Convert country name to lowercase
-                    if (nameLower.contains(inputLower)) {
-                        for (i in correctCountryName.indices) {
-                            if (correctCountryName[i].lowercase() == inputLower && guessedLetters[i].isBlank()) {
-                                guessedLetters = guessedLetters.toMutableList().also { it[i] = userInput }
+                if (showNextButton) {
+                    randomCountryCode = countryCodes.random()
+                    correctCountryName = countryNameMap[randomCountryCode] ?: ""
+                    guessedLetters = List(correctCountryName.length) { "" }
+                    showNextButton = false
+                    message = ""
+                    incorrectGuesses = 0
+                } else {
+                    if (userInput.length == 1) {
+                        val inputLower = userInput.lowercase() // Convert input to lowercase
+                        val nameLower = correctCountryName.lowercase() // Convert country name to lowercase
+                        if (nameLower.contains(inputLower)) {
+                            for (i in correctCountryName.indices) {
+                                if (correctCountryName[i].lowercase() == inputLower && guessedLetters[i].isBlank()) {
+                                    guessedLetters = guessedLetters.toMutableList().also { it[i] = userInput }
+                                }
+                            }
+                            if (!guessedLetters.contains("")) {
+                                message = "Congratulations! You guessed it right!"
+                                showNextButton = true
+                            }
+                        } else {
+                            message = "Try again! Incorrect guess."
+                            incorrectGuesses++
+                            if (incorrectGuesses == 3) {
+                                message = "Correct answer: $correctCountryName"
+                                showNextButton = true
                             }
                         }
-                        if (!guessedLetters.contains("")) {
-                            message = "Congratulations! You guessed it right!"
-                        }
                     } else {
-                        message = "Try again! Incorrect guess."
+                        message = "Please enter a single letter."
                     }
-                } else {
-                    message = "Please enter a single letter."
                 }
             }
         ) {
-            Text(text = "Submit")
+            Text(text = if (showNextButton) "Next" else "Submit")
         }
         Text(text = message, color = Color.Red)
     }
@@ -123,6 +141,7 @@ fun GreetingPreview2() {
         Hint()
     }
 }
+
 
 
 
