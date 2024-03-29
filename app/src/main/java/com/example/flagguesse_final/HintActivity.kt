@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,20 +61,26 @@ fun Hint() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Guess The Country",
+            text = "Think and Guess the Country",
 
-            modifier = Modifier.padding(vertical = 16.dp)
+            modifier = Modifier.padding(vertical = 25.dp)
         )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp)
+                .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(id = countryFlags[randomCountryCode] ?: R.drawable.ad),
-                contentDescription = null,
-                modifier = Modifier.size(200.dp)
-            )
+            Box(modifier = Modifier.width(250.dp).height(220.dp)
+                .background(Color.Blue),
+                contentAlignment = Alignment.Center
+                ){
+                Image(
+                    painter = painterResource(id = countryFlags[randomCountryCode] ?: R.drawable.ad),
+                    contentDescription = null,
+                    modifier = Modifier.size(200.dp)
+                )
+            }
         }
         Text(
             text = buildString {

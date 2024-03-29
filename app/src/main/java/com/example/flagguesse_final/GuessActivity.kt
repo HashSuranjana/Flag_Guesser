@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -103,19 +104,23 @@ fun RandomFlag() {
 
         Text(text = "Guess The Country",
             style = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 20.sp),
-            modifier = Modifier.offset(y= 50.dp)
+            modifier = Modifier.padding(vertical = 25.dp)
         )
         Box(
             modifier = Modifier
-                .offset(y = 100.dp)
                 .fillMaxWidth()
-                .background(color = Color.Cyan),
+                .padding(vertical = 16.dp),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(id = countryFlags[randomCountryCode] ?: R.drawable.ad),
-                contentDescription = null
-            )
+            Box(modifier = Modifier.width(250.dp).height(220.dp)
+                .background(Color.Blue),
+                contentAlignment = Alignment.Center){
+                Image(
+                    painter = painterResource(id = countryFlags[randomCountryCode] ?: R.drawable.ad),
+                    contentDescription = null,
+                    modifier = Modifier.size(200.dp)
+                )
+            }
         }
 
         ExposedDropdownMenuBox(modifier = Modifier.offset(y=150.dp),
