@@ -151,7 +151,7 @@ fun RandomFlag() {
             onClick = {
                 if (!isAnswered && selectedItem != "Select Country") {
                     val isCorrect = selectedItem == correctCountryName
-                    message = if (isCorrect) "Correct! You Guessed It." else "Wrong! Country is: $correctCountryName"
+                    message = if (isCorrect) "Correct! You Guessed It." else "Wrong! $correctCountryName"
                     isAnswered = true
                 } else if (isAnswered) {
                     // Reset variables for the next round

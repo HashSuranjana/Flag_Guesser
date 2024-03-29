@@ -40,8 +40,8 @@ class AdvanceActivity : ComponentActivity() {
 
 @Composable
 fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
-    val countryCodes = remember { randomCountryCodes.shuffled().take(3) }
-    val countryFlags = remember { countryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad } }
+    var countryCodes by remember { mutableStateOf(randomCountryCodes.shuffled().take(3)) }
+    var countryFlags by remember { mutableStateOf(countryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad }) }
     val countryNames = remember { mutableStateListOf("", "", "") }
 
     var attempts by remember { mutableStateOf(0) }
@@ -50,7 +50,9 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize().padding(4.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(4.dp)
     ) {
         countryCodes.forEachIndexed { index, countryCode ->
             Column(
@@ -62,9 +64,9 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
                     contentDescription = null,
                     modifier = Modifier.size(50.dp)
                 )
-
-                val isEditable = !submitted || (submitted && attempts < 3)
                 val isCorrect = countryNames[index] == Data().country_names[countryCode]
+                val isEditable = !submitted || (submitted && !isCorrect && attempts < 3)
+
                 val backgroundColor = when {
                     submitted && isCorrect -> Color.Green
                     submitted && !isCorrect -> Color.Red
@@ -90,17 +92,28 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
 
         Button(
             onClick = {
-                if (!submitted) {
-                    submitted = true
-                    attempts++
-                    correctAttempts = countryNames.countIndexed { index, name ->
-                        name == Data().country_names[countryCodes[index]]
-                    }
+                if (correctAttempts == 3 || attempts == 3) {
+                    // Generate new set of random country codes
+                    val newRandomCountryCodes = Data().countryCodes.shuffled().take(3)
+                    countryCodes = newRandomCountryCodes
+                    countryFlags = newRandomCountryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad }
+                    countryNames.clear()
+                    countryNames.addAll(listOf("", "", ""))
+                    attempts = 0
+                    correctAttempts = 0
+                    submitted = false
                 } else {
-                    attempts++
+                    if (!submitted) {
+                        submitted = true
+                        attempts++
+                        correctAttempts = countryNames.countIndexed { index, name ->
+                            name == Data().country_names[countryCodes[index]]
+                        }
+                    } else {
+                        attempts++
+                    }
                 }
             },
-            enabled = !submitted || attempts < 3,
             modifier = Modifier.width(100.dp)
         ) {
             Text(if (correctAttempts == 3 || attempts == 3) "Next" else "Submit")
