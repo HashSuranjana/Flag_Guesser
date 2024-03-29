@@ -73,7 +73,12 @@ fun Hint() {
             )
         }
         Text(
-            text = guessedLetters.joinToString(" "),
+            text = buildString {
+                for (i in correctCountryName.indices) {
+                    append(if (guessedLetters[i].isBlank()) "-" else guessedLetters[i])
+                    append(" ")
+                }
+            },
 
             modifier = Modifier.padding(vertical = 16.dp)
         )
@@ -89,7 +94,11 @@ fun Hint() {
                     val inputLower = userInput.lowercase() // Convert input to lowercase
                     val nameLower = correctCountryName.lowercase() // Convert country name to lowercase
                     if (nameLower.contains(inputLower)) {
-                        guessedLetters = correctCountryName.map { if (it.lowercase() == inputLower) userInput else "" }
+                        for (i in correctCountryName.indices) {
+                            if (correctCountryName[i].lowercase() == inputLower && guessedLetters[i].isBlank()) {
+                                guessedLetters = guessedLetters.toMutableList().also { it[i] = userInput }
+                            }
+                        }
                         if (!guessedLetters.contains("")) {
                             message = "Congratulations! You guessed it right!"
                         }
@@ -114,5 +123,6 @@ fun GreetingPreview2() {
         Hint()
     }
 }
+
 
 
