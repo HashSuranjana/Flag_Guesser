@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -72,7 +73,7 @@ fun Hint() {
             contentAlignment = Alignment.Center
         ) {
             Box(modifier = Modifier.width(250.dp).height(220.dp)
-                .background(Color.Blue),
+                .background(Color.Blue,shape = RoundedCornerShape(16.dp)),
                 contentAlignment = Alignment.Center
                 ){
                 Image(

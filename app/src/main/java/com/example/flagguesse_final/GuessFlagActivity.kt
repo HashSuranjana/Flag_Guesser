@@ -52,13 +52,7 @@ class GuessFlagActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    FlagGuessefinalTheme {
-        GuessFlagGame() // Call the GuessFlagGame composable
-    }
-}
+
 
 @Composable
 fun GuessFlagGame() {
@@ -158,5 +152,13 @@ fun GuessFlagGame() {
                 Text(text = "Submit") // Display "Submit" button
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    FlagGuessefinalTheme {
+        GuessFlagGame() // Call the GuessFlagGame composable
     }
 }

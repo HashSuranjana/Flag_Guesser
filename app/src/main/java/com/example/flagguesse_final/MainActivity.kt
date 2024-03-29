@@ -5,19 +5,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,7 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
-import java.time.format.TextStyle
+import java.util.*
+import kotlin.concurrent.timer
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,16 +34,47 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Column (modifier= Modifier
-                        .fillMaxSize()
-                        .background(color = Color.LightGray)
-                        .padding(40.dp),
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = Color.LightGray)
+                            .padding(40.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween){
-
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Mytext(text = "Flag Guesser")
-                        MyButtons()
+                        var timerEnabled by remember { mutableStateOf(false) }
+                        var timeLeft by remember { mutableStateOf(10) }
 
+                        if (timerEnabled) {
+                            CountdownTimer(timeLeft = timeLeft)
+                        }
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Switch(
+                                checked = timerEnabled,
+                                onCheckedChange = { isChecked ->
+                                    timerEnabled = isChecked
+                                    if (!isChecked) {
+                                        // Reset the timer if switch is turned off
+                                        timeLeft = 10
+                                    }
+                                },
+                                colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Enable Timer",
+
+                            )
+                        }
+
+                        MyButtons()
                     }
                 }
             }
@@ -54,13 +82,12 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun MyButtons(){
-
+    fun MyButtons() {
         Column (
 
             modifier = Modifier
-            .height(150.dp)
-            .width(500.dp),
+                .height(150.dp)
+                .width(500.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround){
 
@@ -123,9 +150,28 @@ class MainActivity : ComponentActivity() {
             ))
     }
 
+    @Composable
+    fun CountdownTimer(timeLeft: Int) {
+        var currentSeconds by remember { mutableStateOf(timeLeft) }
 
+        DisposableEffect(Unit) {
+            val timer = timer(period = 1000) {
+                currentSeconds--
+                if (currentSeconds <= 0) {
+                    cancel()
+                }
+            }
 
+            onDispose {
+                timer.cancel()
+            }
+        }
 
+        Text(
+            text = "Time Left: $currentSeconds seconds",
+
+        )
+    }
 
     @Preview(showBackground = true)
     @Composable
@@ -146,4 +192,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-

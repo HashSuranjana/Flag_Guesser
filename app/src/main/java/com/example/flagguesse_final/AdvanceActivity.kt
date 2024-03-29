@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.flagguesse_final.Data
 import com.example.flagguesse_final.R
@@ -57,7 +58,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
         countryCodes.forEachIndexed { index, countryCode ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(vertical = 2.dp)
+                modifier = Modifier.padding(vertical = 2.dp).fillMaxWidth()
             ) {
                 Image(
                     painter = painterResource(id = countryFlags[index]),
@@ -129,4 +130,13 @@ inline fun <T> Iterable<T>.countIndexed(predicate: (Int, T) -> Boolean): Int {
         }
     }
     return count
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview2() {
+    FlagGuessefinalTheme {
+        val randomCountryCodes = remember { Data().countryCodes.shuffled().take(3) }
+        DisplayFlagsAndInputs(randomCountryCodes)
+    }
 }
