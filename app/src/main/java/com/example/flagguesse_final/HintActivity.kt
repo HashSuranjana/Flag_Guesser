@@ -134,7 +134,7 @@ fun Hint() {
                         message = "Please enter a single letter."
                     }
                 }
-            }
+            }, modifier = Modifier.width(200.dp)
         ) {
             Text(text = if (showNextButton) "Next" else "Submit")
         }
