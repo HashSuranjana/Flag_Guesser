@@ -117,31 +117,33 @@ class MainActivity : ComponentActivity() {
                                 CountdownTimer(timeLeft = timeLeft)
                             }
 
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 16.dp),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                Switch(
-                                    checked = timerEnabled,
-                                    onCheckedChange = { isChecked ->
-                                        timerEnabled = isChecked
-                                        if (!isChecked) {
-                                            // Reset the timer if switch is turned off
-                                            timeLeft = 10
-                                        }
-                                    },
-                                    colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = "Enable Timer",
+                            Column (horizontalAlignment = Alignment.CenterHorizontally){
+                                Row(
+                                    modifier = Modifier
 
+                                        .padding(top = 16.dp),
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Switch(
+                                        checked = timerEnabled,
+                                        onCheckedChange = { isChecked ->
+                                            timerEnabled = isChecked
+                                            if (!isChecked) {
+                                                // Reset the timer if switch is turned off
+                                                timeLeft = 10
+                                            }
+                                        },
+                                        colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
                                     )
-                            }
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Enable Timer",
 
-                            MyButtons()
+                                        )
+                                }
+
+                                MyButtons()
+                            }
                         }
 
                     }
