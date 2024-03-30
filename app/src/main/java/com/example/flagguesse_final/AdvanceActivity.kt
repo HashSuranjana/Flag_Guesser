@@ -16,15 +16,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
 
 class AdvanceActivity : ComponentActivity() {
+    private var totalMarks by mutableStateOf(0)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -53,13 +58,14 @@ class AdvanceActivity : ComponentActivity() {
 
 @Composable
 fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
-    var countryCodes by remember { mutableStateOf(randomCountryCodes.shuffled().take(3)) }
+    var countryCodes by rememberSaveable { mutableStateOf(randomCountryCodes.shuffled().take(3)) }
     var countryFlags by remember { mutableStateOf(countryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad }) }
     val countryNames = remember { mutableStateListOf("", "", "") }
 
     var attempts by remember { mutableStateOf(0) }
     var correctAttempts by remember { mutableStateOf(0) }
     var submitted by remember { mutableStateOf(false) }
+    var totalMarks by remember { mutableStateOf(0) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -75,9 +81,11 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
                     .padding(vertical = 2.dp)
                     .fillMaxWidth()
             ) {
-                Box(modifier = Modifier.width(150.dp).height(120.dp)
-                    .background(Color.Gray,shape = RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.Center){
+                Box(modifier = Modifier
+                    .width(150.dp)
+                    .height(120.dp)
+                    .background(Color.Gray, shape = RoundedCornerShape(16.dp)),
+                    contentAlignment = Alignment.Center) {
                     Image(
                         painter = painterResource(id = countryFlags[index]),
                         contentDescription = null,
@@ -120,8 +128,9 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
                     countryNames.clear()
                     countryNames.addAll(listOf("", "", ""))
                     attempts = 0
-                    correctAttempts = 0
                     submitted = false
+                    totalMarks = correctAttempts
+
                 } else {
                     if (!submitted) {
                         submitted = true
@@ -129,15 +138,26 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
                         correctAttempts = countryNames.countIndexed { index, name ->
                             name == Data().country_names[countryCodes[index]]
                         }
+                        totalMarks = correctAttempts
+
+
                     } else {
                         attempts++
                     }
                 }
-            },
-            modifier = Modifier.width(100.dp)
+            }
+            , modifier = Modifier.width(200.dp),
+
+            colors = ButtonDefaults.buttonColors(Color.Red)
         ) {
             Text(if (correctAttempts == 3 || attempts == 3) "Next" else "Submit")
         }
+
+        // Display total marks obtained by the user
+        Text(
+            text = "Marks: $totalMarks / 3",
+            modifier = Modifier.padding(8.dp)
+        )
     }
 }
 
