@@ -1,11 +1,13 @@
 package com.example.flagguesse_final
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -103,111 +106,235 @@ fun RandomFlag() {
 
     var message by rememberSaveable { mutableStateOf("") }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Gray),
-        horizontalAlignment = Alignment.CenterHorizontally) {
+    val orientation = LocalConfiguration.current.orientation
 
-        Text(text = "Guess The Country",
-            style = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 20.sp),
-            modifier = Modifier.padding(vertical = 25.dp)
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Box(modifier = Modifier.width(250.dp).height(220.dp)
-                .background(Color.White,shape = RoundedCornerShape(16.dp)),
-                contentAlignment = Alignment.Center){
-                Image(
-                    painter = painterResource(id = countryFlags[randomCountryCode] ?: R.drawable.ad),
-                    contentDescription = null,
-                    modifier = Modifier.size(200.dp)
-                )
-            }
-        }
+    if (orientation == Configuration.ORIENTATION_PORTRAIT){
 
-        ExposedDropdownMenuBox(modifier = Modifier.offset(y=150.dp),
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }) {
-            TextField(
-                modifier = Modifier.menuAnchor(),
-                value = selectedItem,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(150, 174, 196)),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+
+            Text(text = "Guess The Country",
+                style = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 20.sp),
+                modifier = Modifier.padding(vertical = 25.dp)
             )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(modifier = Modifier
+                    .width(250.dp)
+                    .height(220.dp)
+                    .background(Color.White, shape = RoundedCornerShape(16.dp)),
+                    contentAlignment = Alignment.Center){
+                    Image(
+                        painter = painterResource(id = countryFlags[randomCountryCode] ?: R.drawable.ad),
+                        contentDescription = null,
+                        modifier = Modifier.size(200.dp)
+                    )
+                }
+            }
 
-            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                countryNames.forEachIndexed { index, text ->
-                    DropdownMenuItem(
-                        text = { Text(text = text) },
-                        onClick = {
-                            selectedItem = countryNames[index]
-                            expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+            ExposedDropdownMenuBox(modifier = Modifier.offset(y=150.dp),
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded }) {
+                TextField(
+                    modifier = Modifier.menuAnchor(),
+                    value = selectedItem,
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
+                )
+
+                ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                    countryNames.forEachIndexed { index, text ->
+                        DropdownMenuItem(
+                            text = { Text(text = text) },
+                            onClick = {
+                                selectedItem = countryNames[index]
+                                expanded = false
+                            },
+                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                        )
+                    }
+                }
+            }
+
+            Button(
+                modifier = Modifier
+                    .offset(y = 400.dp)
+                    .width(200.dp),
+
+                onClick = {
+                    if (!isAnswered && selectedItem != "Select Country") {
+                        val isCorrect = selectedItem == correctCountryName
+                        message = if (isCorrect) "Correct! You Guessed It." else "Wrong! $correctCountryName"
+                        isAnswered = true
+                    } else if (isAnswered) {
+                        // Reset variables for the next round
+                        isAnswered = false
+                        message = ""
+                        selectedItem = "Select Country"
+                        randomCountryCode = countryCodes.random()
+                        correctCountryName = countryNameMap[randomCountryCode] ?: ""
+                    }
+                },
+
+                colors = ButtonDefaults.buttonColors(Color.Red)
+            ) {
+                Text(text = if (isAnswered) "Next" else "Submit")
+            }
+
+
+            // Display the correct or incorrect message
+
+            val correctPartColor = if (message.startsWith("Correct")) Color.Green else Color.Red
+            val incorrectPartColor = Color.Blue
+
+            val correctPart = message.substringBefore(":").trim()
+            val incorrectPart = message.substringAfter(":").trim()
+
+            Row(modifier = Modifier
+                .padding(16.dp)
+                .height(70.dp)
+                .offset(y = 170.dp)) {
+                Text(
+                    text = correctPart,
+                    color = correctPartColor,
+                    modifier = Modifier.padding(end = 4.dp),
+                    style = TextStyle(fontSize = 20.sp)
+                )
+                if (message.startsWith("Wrong")) {
+                    Text(
+                        text = incorrectPart,
+
+                        style = TextStyle(fontSize = 20.sp)
                     )
                 }
             }
         }
+    }else{
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(150, 174, 196))
+            .padding(horizontal = 40.dp)) {
 
-        Button(
-            modifier = Modifier
-                .offset(y = 400.dp)
-                .width(200.dp),
-
-            onClick = {
-                if (!isAnswered && selectedItem != "Select Country") {
-                    val isCorrect = selectedItem == correctCountryName
-                    message = if (isCorrect) "Correct! You Guessed It." else "Wrong! $correctCountryName"
-                    isAnswered = true
-                } else if (isAnswered) {
-                    // Reset variables for the next round
-                    isAnswered = false
-                    message = ""
-                    selectedItem = "Select Country"
-                    randomCountryCode = countryCodes.random()
-                    correctCountryName = countryNameMap[randomCountryCode] ?: ""
-                }
-            },
-
-            colors = ButtonDefaults.buttonColors(Color.Red)
-        ) {
-            Text(text = if (isAnswered) "Next" else "Submit")
-        }
-
-
-        // Display the correct or incorrect message
-
-        val correctPartColor = if (message.startsWith("Correct")) Color.Green else Color.Red
-        val incorrectPartColor = Color.Blue
-
-        val correctPart = message.substringBefore(":").trim()
-        val incorrectPart = message.substringAfter(":").trim()
-
-        Row(modifier = Modifier
-            .padding(16.dp)
-            .height(70.dp)
-            .offset(y = 200.dp)) {
-            Text(
-                text = correctPart,
-                color = correctPartColor,
-                modifier = Modifier.padding(end = 4.dp),
-                style = TextStyle(fontSize = 20.sp)
+            Text(text = "Guess The Country",
+                style = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 20.sp),
+                modifier = Modifier.padding(vertical = 25.dp)
             )
-            if (message.startsWith("Wrong")) {
-                Text(
-                    text = incorrectPart,
-                    color = incorrectPartColor,
-                    style = TextStyle(fontSize = 20.sp)
-                )
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween) {
+                    Box(
+                        modifier = Modifier
+                            .padding(vertical = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(modifier = Modifier
+                            .width(250.dp)
+                            .height(220.dp)
+                            .background(Color.White, shape = RoundedCornerShape(16.dp)),
+                            contentAlignment = Alignment.Center){
+                            Image(
+                                painter = painterResource(id = countryFlags[randomCountryCode] ?: R.drawable.ad),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                            )
+                        }
+                    }
+
+                    Column (horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.SpaceBetween){
+                        ExposedDropdownMenuBox(modifier = Modifier.offset(x = 150.dp,y=30.dp),
+                            expanded = expanded,
+                            onExpandedChange = { expanded = !expanded }) {
+                            TextField(
+                                modifier = Modifier.menuAnchor(),
+                                value = selectedItem,
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
+                            )
+
+                            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                countryNames.forEachIndexed { index, text ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = text) },
+                                        onClick = {
+                                            selectedItem = countryNames[index]
+                                            expanded = false
+                                        },
+                                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                                    )
+                                }
+                            }
+
+                            Button(
+                                modifier = Modifier
+                                    .offset(x=30.dp,y=100.dp)
+                                    .width(200.dp),
+
+                                onClick = {
+                                    if (!isAnswered && selectedItem != "Select Country") {
+                                        val isCorrect = selectedItem == correctCountryName
+                                        message = if (isCorrect) "Correct! You Guessed It." else "Wrong! $correctCountryName"
+                                        isAnswered = true
+                                    } else if (isAnswered) {
+                                        // Reset variables for the next round
+                                        isAnswered = false
+                                        message = ""
+                                        selectedItem = "Select Country"
+                                        randomCountryCode = countryCodes.random()
+                                        correctCountryName = countryNameMap[randomCountryCode] ?: ""
+                                    }
+                                },
+
+                                colors = ButtonDefaults.buttonColors(Color.Red)
+                            ) {
+                                Text(text = if (isAnswered) "Next" else "Submit")
+                            }
+
+
+                            // Display the correct or incorrect message
+
+                            val correctPartColor = if (message.startsWith("Correct")) Color.Green else Color.Red
+                            val incorrectPartColor = Color.Blue
+
+                            val correctPart = message.substringBefore(":").trim()
+                            val incorrectPart = message.substringAfter(":").trim()
+
+                            Row(modifier = Modifier
+                                .padding(16.dp)
+                                .height(70.dp)
+                                .offset(y = 200.dp)) {
+                                Text(
+                                    text = correctPart,
+                                    color = correctPartColor,
+                                    modifier = Modifier.padding(end = 4.dp),
+                                    style = TextStyle(fontSize = 20.sp)
+                                )
+                                if (message.startsWith("Wrong")) {
+                                    Text(
+                                        text = incorrectPart,
+                                        color = incorrectPartColor,
+                                        style = TextStyle(fontSize = 20.sp)
+                                    )
+                                }
+                            }
+                        }
+                    }
             }
+
+
         }
+
     }
 }
+
 
 
 
