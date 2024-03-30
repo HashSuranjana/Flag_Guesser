@@ -1,6 +1,7 @@
 package com.example.flagguesse_final
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,56 +40,110 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(color = Color(150, 174, 196)),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween
-                    ) {
+                    val orientation = LocalConfiguration.current.orientation
+                    if (orientation == Configuration.ORIENTATION_PORTRAIT){
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = Color(150, 174, 196)),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
 
-                        Box(modifier = Modifier
-                            .fillMaxWidth()
-                            .height(500.dp) ){
-                            Image(painter = painterResource(id = R.drawable.bgimage), contentDescription = null,
+                            Box(modifier = Modifier
+                                .fillMaxWidth()
+                                .height(500.dp) ){
+                                Image(painter = painterResource(id = R.drawable.bgimage), contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .fillMaxHeight()
+                                )
+                            }
+
+                            var timerEnabled by remember { mutableStateOf(false) }
+                            var timeLeft by remember { mutableStateOf(10) }
+
+                            if (timerEnabled) {
+                                CountdownTimer(timeLeft = timeLeft)
+                            }
+
+                            Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .fillMaxHeight()
-                            )
+                                    .padding(top = 16.dp),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Switch(
+                                    checked = timerEnabled,
+                                    onCheckedChange = { isChecked ->
+                                        timerEnabled = isChecked
+                                        if (!isChecked) {
+                                            // Reset the timer if switch is turned off
+                                            timeLeft = 10
+                                        }
+                                    },
+                                    colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "Enable Timer",
+
+                                )
+                            }
+
+                            MyButtons()
                         }
-
-                        var timerEnabled by remember { mutableStateOf(false) }
-                        var timeLeft by remember { mutableStateOf(10) }
-
-                        if (timerEnabled) {
-                            CountdownTimer(timeLeft = timeLeft)
-                        }
-
+                    }else{
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 16.dp),
-                            horizontalArrangement = Arrangement.Center
+                                .fillMaxSize()
+                                .background(color = Color(150, 174, 196)),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Switch(
-                                checked = timerEnabled,
-                                onCheckedChange = { isChecked ->
-                                    timerEnabled = isChecked
-                                    if (!isChecked) {
-                                        // Reset the timer if switch is turned off
-                                        timeLeft = 10
-                                    }
-                                },
-                                colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "Enable Timer",
 
-                            )
+                            Box(modifier = Modifier
+                                .height(500.dp) ){
+                                Image(painter = painterResource(id = R.drawable.bgimage), contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                )
+                            }
+
+                            var timerEnabled by remember { mutableStateOf(false) }
+                            var timeLeft by remember { mutableStateOf(10) }
+
+                            if (timerEnabled) {
+                                CountdownTimer(timeLeft = timeLeft)
+                            }
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 16.dp),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Switch(
+                                    checked = timerEnabled,
+                                    onCheckedChange = { isChecked ->
+                                        timerEnabled = isChecked
+                                        if (!isChecked) {
+                                            // Reset the timer if switch is turned off
+                                            timeLeft = 10
+                                        }
+                                    },
+                                    colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "Enable Timer",
+
+                                    )
+                            }
+
+                            MyButtons()
                         }
 
-                        MyButtons()
                     }
                 }
             }
