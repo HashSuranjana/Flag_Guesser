@@ -112,7 +112,7 @@ fun RandomFlag() {
 
         Column(modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(150, 174, 196)),
+            .background(color = Color(15, 77, 92)),
             horizontalAlignment = Alignment.CenterHorizontally) {
 
             Text(text = "Guess The Country",
@@ -165,7 +165,7 @@ fun RandomFlag() {
 
             Button(
                 modifier = Modifier
-                    .offset(y = 400.dp)
+                    .offset(y = 300.dp)
                     .width(200.dp),
 
                 onClick = {
@@ -185,7 +185,7 @@ fun RandomFlag() {
 
                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
-                Text(text = if (isAnswered) "Next" else "Submit")
+                Text(text = if (isAnswered) "Next" else "Submit", color = Color.White)
             }
 
 
@@ -222,7 +222,7 @@ fun RandomFlag() {
     }else{
         Column(modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(150, 174, 196))
+            .background(color = Color(15, 77, 92))
             .padding(horizontal = 40.dp)) {
 
             Text(text = "Guess The Country",
@@ -298,7 +298,7 @@ fun RandomFlag() {
 
                                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                             ) {
-                                Text(text = if (isAnswered) "Next" else "Submit")
+                                Text(text = if (isAnswered) "Next" else "Submit",color = Color.White)
                             }
 
 

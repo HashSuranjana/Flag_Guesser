@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,14 +65,14 @@ fun Hint() {
     val countryFlags = remember { Data().countryFlags }
     val countryNameMap = remember { Data().country_names }
 
-    var randomCountryCode by remember { mutableStateOf(countryCodes.random()) }
-    var correctCountryName by remember { mutableStateOf(countryNameMap[randomCountryCode] ?: "") }
+    var randomCountryCode by rememberSaveable { mutableStateOf(countryCodes.random()) }
+    var correctCountryName by rememberSaveable { mutableStateOf(countryNameMap[randomCountryCode] ?: "") }
 
-    var guessedLetters by remember { mutableStateOf(List(correctCountryName.length) { "" }) }
-    var userInput by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") }
-    var incorrectGuesses by remember { mutableStateOf(0) }
-    var showNextButton by remember { mutableStateOf(false) }
+    var guessedLetters by rememberSaveable { mutableStateOf(List(correctCountryName.length) { "" }) }
+    var userInput by rememberSaveable { mutableStateOf("") }
+    var message by rememberSaveable { mutableStateOf("") }
+    var incorrectGuesses by rememberSaveable { mutableStateOf(0) }
+    var showNextButton by rememberSaveable { mutableStateOf(false) }
 
     val orientation = LocalConfiguration.current.orientation
     if (orientation == Configuration.ORIENTATION_PORTRAIT){
@@ -79,7 +80,7 @@ fun Hint() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(150, 174, 196)),
+                .background(color = Color(15, 77, 92)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -163,7 +164,7 @@ fun Hint() {
 
                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
-                Text(text = if (showNextButton) "Next" else "Submit")
+                Text(text = if (showNextButton) "Next" else "Submit", color = Color.White)
             }
             Text(text = message, color = Color.Red)
         }
@@ -171,7 +172,7 @@ fun Hint() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(150, 174, 196)),
+                .background(color = Color(15, 77, 92)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -259,7 +260,7 @@ fun Hint() {
 
                         colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                     ) {
-                        Text(text = if (showNextButton) "Next" else "Submit")
+                        Text(text = if (showNextButton) "Next" else "Submit", color = Color.White)
                     }
                     Text(text = message, color = Color.Red,modifier = Modifier.offset(y=25.dp))
                 }

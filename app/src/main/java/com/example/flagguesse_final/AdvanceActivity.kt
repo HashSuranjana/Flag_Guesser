@@ -77,7 +77,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(150, 174, 196)),
+                .background(color = Color(15, 77, 92)),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             countryCodes.forEachIndexed { index, countryCode ->
@@ -163,7 +163,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
 
                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
-                Text(if (correctAttempts == 3 || attempts == 3) "Next" else "Submit")
+                Text(if (correctAttempts == 3 || attempts == 3) "Next" else "Submit", color = Color.White)
             }
 
             // Display total marks obtained by the user
@@ -175,7 +175,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
     }else{
         Column(modifier = Modifier
             .fillMaxHeight()
-            .background(color = Color(150, 174, 196))
+            .background(color = Color(15, 77, 92))
             .padding(top = 60.dp),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally) {
@@ -276,7 +276,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
 
                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
-                Text(if (correctAttempts == 3 || attempts == 3) "Next" else "Submit")
+                Text(if (correctAttempts == 3 || attempts == 3) "Next" else "Submit", color = Color.White)
             }
 
             // Display total marks obtained by the user
@@ -284,7 +284,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
                 text = "Marks: $totalMarks / 3",
                 modifier = Modifier
                     .padding(8.dp)
-                    .offset(x=370.dp,y=-310.dp)
+                    .offset(x=340.dp,y=-320.dp)
             )
         }
     }

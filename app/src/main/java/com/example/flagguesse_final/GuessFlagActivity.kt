@@ -83,7 +83,7 @@ fun GuessFlagGame() {
         Column(
             modifier = Modifier
                 .fillMaxSize() // Fill the entire size of the parent
-                .background(color = Color(150, 174, 196)), // Add padding around the column
+                .background(color = Color(15, 77, 92)), // Add padding around the column
             horizontalAlignment = Alignment.CenterHorizontally, // Align content horizontally to the center
             verticalArrangement = Arrangement.SpaceAround // Arrange content vertically with equal space around
         ) {
@@ -164,7 +164,7 @@ fun GuessFlagGame() {
                         shuffledFlags = emptyList() // Clear shuffled flags list
                     }
                 ) {
-                    Text(text = "Next") // Display "Next" button
+                    Text(text = "Next", color = Color.White) // Display "Next" button
                 }
             } else {
                 Button(
@@ -184,7 +184,7 @@ fun GuessFlagGame() {
 
                     colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                 ) {
-                    Text(text = "Submit") // Display "Submit" button
+                    Text(text = "Submit", color = Color.White) // Display "Submit" button
                 }
             }
         }
@@ -192,7 +192,7 @@ fun GuessFlagGame() {
         Column(
             modifier = Modifier
                 .fillMaxSize() // Fill the entire size of the parent
-                .background(color = Color(150, 174, 196)), // Add padding around the column
+                .background(color = Color(15, 77, 92)), // Add padding around the column
             horizontalAlignment = Alignment.CenterHorizontally, // Align content horizontally to the center
             verticalArrangement = Arrangement.SpaceBetween // Arrange content vertically with equal space around
         ) {
@@ -281,7 +281,7 @@ fun GuessFlagGame() {
                     },
                     colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                 ) {
-                    Text(text = "Next") // Display "Next" button
+                    Text(text = "Next", color = Color.White) // Display "Next" button
                 }
             } else {
                 Button(
@@ -301,7 +301,7 @@ fun GuessFlagGame() {
 
                     colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                 ) {
-                    Text(text = "Submit") // Display "Submit" button
+                    Text(text = "Submit", color = Color.White) // Display "Submit" button
                 }
             }
         }

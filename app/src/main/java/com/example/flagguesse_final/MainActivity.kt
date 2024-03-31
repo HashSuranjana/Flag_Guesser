@@ -36,6 +36,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
@@ -187,7 +189,7 @@ class MainActivity : ComponentActivity() {
 
                     colors = ButtonDefaults.buttonColors(Color(110, 39, 89))) {
 
-                    Text(text = "Guess Country")
+                    Text(text = "Guess Country", color = Color.White, style = TextStyle(fontWeight = FontWeight.Bold))
 
                 }
                 Button(onClick = {
@@ -198,7 +200,7 @@ class MainActivity : ComponentActivity() {
                     colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                     )  {
 
-                    Text(text = "Guess-Hints")
+                    Text(text = "Guess-Hints", color = Color.White)
 
                 }
             }
@@ -217,7 +219,7 @@ class MainActivity : ComponentActivity() {
 
                     colors = ButtonDefaults.buttonColors(Color(110, 39, 89))) {
 
-                    Text(text = "Guess Flag")
+                    Text(text = "Guess Flag", color = Color.White)
 
                 }
 
@@ -228,7 +230,7 @@ class MainActivity : ComponentActivity() {
 
                     colors = ButtonDefaults.buttonColors(Color(110, 39, 89))) {
 
-                    Text(text = "Advance-Level")
+                    Text(text = "Advance-Level", color = Color.White)
 
                 }
             }
