@@ -93,7 +93,7 @@ fun GuessFlagGame() {
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
-                ) // Define text style
+                )
             )
 
             if (shuffledFlags.isEmpty()) { // Check if shuffled flags list is empty
@@ -104,10 +104,10 @@ fun GuessFlagGame() {
             shuffledFlags.forEachIndexed { index, flagResourceId -> // Iterate through shuffled flags
                 val isSelected = selectedFlagIndex == index // Check if current flag is selected
                 val boxColor =
-                    if (isCorrect != null && index == 2 && isCorrect!!) Color.Green else if (isCorrect != null && index == 2 && !isCorrect!!) Color.Red else if (isSelected) Color.Blue else Color.Gray // Define box color based on correctness and selection
+                    if (isCorrect != null && index == 2 && isCorrect!!) Color.Green else if (isCorrect != null && index == 2 && !isCorrect!!) Color.Red else if (isSelected) Color(225, 200, 225) else Color(150, 200, 220) // Define box color based on correctness and selection
                 Box(
                     modifier = Modifier
-                        .size(170.dp) // Set the size of the box
+                        .size(200.dp) // Set the size of the box
                         .padding(4.dp) // Add padding around the box
                         .background(
                             color = boxColor,
@@ -216,7 +216,7 @@ fun GuessFlagGame() {
                 shuffledFlags.forEachIndexed { index, flagResourceId -> // Iterate through shuffled flags
                     val isSelected = selectedFlagIndex == index // Check if current flag is selected
                     val boxColor =
-                        if (isCorrect != null && index == 2 && isCorrect!!) Color.Green else if (isCorrect != null && index == 2 && !isCorrect!!) Color.Red else if (isSelected) Color.Blue else Color.Gray // Define box color based on correctness and selection
+                        if (isCorrect != null && isCorrect!!) Color.Green else if (isCorrect != null && !isCorrect!!) Color.Red else if (isSelected) Color(225, 200, 225) else Color(150, 200, 220) // Define box color based on correctness and selection
 
 
                     Box(

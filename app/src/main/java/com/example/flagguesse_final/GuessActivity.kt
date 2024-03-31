@@ -128,7 +128,7 @@ fun RandomFlag() {
                 Box(modifier = Modifier
                     .width(250.dp)
                     .height(220.dp)
-                    .background(Color.White, shape = RoundedCornerShape(16.dp)),
+                    .background(Color(150, 200, 220), shape = RoundedCornerShape(16.dp)),
                     contentAlignment = Alignment.Center){
                     Image(
                         painter = painterResource(id = countryFlags[randomCountryCode] ?: R.drawable.ad),
@@ -201,20 +201,23 @@ fun RandomFlag() {
                 .padding(16.dp)
                 .height(70.dp)
                 .offset(y = 170.dp)) {
-                Text(
-                    text = correctPart,
-                    color = correctPartColor,
-                    modifier = Modifier.padding(end = 4.dp),
-                    style = TextStyle(fontSize = 20.sp)
-                )
+                if (message.startsWith("Correct")) {
+                    Text(
+                        text = correctPart,
+                        color = correctPartColor,
+                        modifier = Modifier.padding(end = 4.dp),
+                        style = TextStyle(fontSize = 20.sp)
+                    )
+                }
                 if (message.startsWith("Wrong")) {
                     Text(
                         text = incorrectPart,
-
+                        color = incorrectPartColor,
                         style = TextStyle(fontSize = 20.sp)
                     )
                 }
             }
+
         }
     }else{
         Column(modifier = Modifier
@@ -237,7 +240,7 @@ fun RandomFlag() {
                         Box(modifier = Modifier
                             .width(250.dp)
                             .height(220.dp)
-                            .background(Color.White, shape = RoundedCornerShape(16.dp)),
+                            .background(Color(150, 200, 220), shape = RoundedCornerShape(16.dp)),
                             contentAlignment = Alignment.Center){
                             Image(
                                 painter = painterResource(id = countryFlags[randomCountryCode] ?: R.drawable.ad),
@@ -310,13 +313,15 @@ fun RandomFlag() {
                             Row(modifier = Modifier
                                 .padding(16.dp)
                                 .height(70.dp)
-                                .offset(y = 200.dp)) {
-                                Text(
-                                    text = correctPart,
-                                    color = correctPartColor,
-                                    modifier = Modifier.padding(end = 4.dp),
-                                    style = TextStyle(fontSize = 20.sp)
-                                )
+                                .offset(y = 170.dp)) {
+                                if (message.startsWith("Correct")) {
+                                    Text(
+                                        text = correctPart,
+                                        color = correctPartColor,
+                                        modifier = Modifier.padding(end = 4.dp),
+                                        style = TextStyle(fontSize = 20.sp)
+                                    )
+                                }
                                 if (message.startsWith("Wrong")) {
                                     Text(
                                         text = incorrectPart,
@@ -325,6 +330,7 @@ fun RandomFlag() {
                                     )
                                 }
                             }
+
                         }
                     }
             }

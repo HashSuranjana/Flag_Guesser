@@ -98,7 +98,7 @@ fun Hint() {
                 Box(modifier = Modifier
                     .width(250.dp)
                     .height(220.dp)
-                    .background(Color.Blue, shape = RoundedCornerShape(16.dp)),
+                    .background(Color(150, 200, 220), shape = RoundedCornerShape(16.dp)),
                     contentAlignment = Alignment.Center
                     ){
                     Image(
@@ -192,7 +192,7 @@ fun Hint() {
                     Box(modifier = Modifier
                         .width(250.dp)
                         .height(220.dp)
-                        .background(Color.Blue, shape = RoundedCornerShape(16.dp)),
+                        .background(Color(150, 200, 220), shape = RoundedCornerShape(16.dp)),
                         contentAlignment = Alignment.Center
                     ){
                         Image(
