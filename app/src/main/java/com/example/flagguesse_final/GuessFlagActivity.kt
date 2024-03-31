@@ -182,7 +182,7 @@ fun GuessFlagGame() {
                     enabled = selectedFlagIndex != null // Enable button if a flag is selected
                     , modifier = Modifier.width(200.dp),
 
-                    colors = ButtonDefaults.buttonColors(Color.Red)
+                    colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                 ) {
                     Text(text = "Submit") // Display "Submit" button
                 }
@@ -279,7 +279,7 @@ fun GuessFlagGame() {
                         selectedFlagIndex = null // Reset selected flag index
                         shuffledFlags = emptyList() // Clear shuffled flags list
                     },
-                    colors = ButtonDefaults.buttonColors(Color.Red)
+                    colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                 ) {
                     Text(text = "Next") // Display "Next" button
                 }
@@ -299,7 +299,7 @@ fun GuessFlagGame() {
                     enabled = selectedFlagIndex != null // Enable button if a flag is selected
                     , modifier = Modifier.width(200.dp),
 
-                    colors = ButtonDefaults.buttonColors(Color.Red)
+                    colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                 ) {
                     Text(text = "Submit") // Display "Submit" button
                 }

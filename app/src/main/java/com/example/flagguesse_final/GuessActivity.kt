@@ -183,7 +183,7 @@ fun RandomFlag() {
                     }
                 },
 
-                colors = ButtonDefaults.buttonColors(Color.Red)
+                colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
                 Text(text = if (isAnswered) "Next" else "Submit")
             }
@@ -296,7 +296,7 @@ fun RandomFlag() {
                                     }
                                 },
 
-                                colors = ButtonDefaults.buttonColors(Color.Red)
+                                colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                             ) {
                                 Text(text = if (isAnswered) "Next" else "Submit")
                             }

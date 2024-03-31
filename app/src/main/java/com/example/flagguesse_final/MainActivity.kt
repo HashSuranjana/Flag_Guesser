@@ -3,6 +3,7 @@ package com.example.flagguesse_final
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.provider.CalendarContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -174,7 +175,7 @@ class MainActivity : ComponentActivity() {
                     var intent = Intent(this@MainActivity, GuessActivity::class.java)
                     startActivity(intent)},
 
-                    colors = ButtonDefaults.buttonColors(Color.Red)) {
+                    colors = ButtonDefaults.buttonColors(Color(110, 39, 89))) {
 
                     Text(text = "Guess Country")
 
@@ -184,7 +185,7 @@ class MainActivity : ComponentActivity() {
                     var i = Intent(this@MainActivity,HintActivity::class.java)
                     startActivity(i) },
 
-                    colors = ButtonDefaults.buttonColors(Color.Red)
+                    colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                     )  {
 
                     Text(text = "Guess-Hints")
@@ -204,7 +205,7 @@ class MainActivity : ComponentActivity() {
                     var i = Intent(this@MainActivity,GuessFlagActivity::class.java)
                     startActivity(i) },
 
-                    colors = ButtonDefaults.buttonColors(Color.Red)) {
+                    colors = ButtonDefaults.buttonColors(Color(110, 39, 89))) {
 
                     Text(text = "Guess Flag")
 
@@ -215,7 +216,7 @@ class MainActivity : ComponentActivity() {
                     var i = Intent(this@MainActivity,AdvanceActivity::class.java)
                     startActivity(i) },
 
-                    colors = ButtonDefaults.buttonColors(Color.Red)) {
+                    colors = ButtonDefaults.buttonColors(Color(110, 39, 89))) {
 
                     Text(text = "Advance-Level")
 

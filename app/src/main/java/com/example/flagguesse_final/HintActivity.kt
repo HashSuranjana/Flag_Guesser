@@ -161,7 +161,7 @@ fun Hint() {
                     }
                 }, modifier = Modifier.width(200.dp),
 
-                colors = ButtonDefaults.buttonColors(Color.Red)
+                colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
                 Text(text = if (showNextButton) "Next" else "Submit")
             }
@@ -257,7 +257,7 @@ fun Hint() {
                             }
                         }, modifier = Modifier.width(200.dp),
 
-                        colors = ButtonDefaults.buttonColors(Color.Red)
+                        colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                     ) {
                         Text(text = if (showNextButton) "Next" else "Submit")
                     }

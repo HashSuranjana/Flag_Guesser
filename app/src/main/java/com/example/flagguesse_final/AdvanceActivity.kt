@@ -161,7 +161,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
                 }
                 , modifier = Modifier.width(200.dp),
 
-                colors = ButtonDefaults.buttonColors(Color.Red)
+                colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
                 Text(if (correctAttempts == 3 || attempts == 3) "Next" else "Submit")
             }
@@ -274,7 +274,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
                     .width(200.dp)
                     .offset( x=-10.dp, y=20.dp),
 
-                colors = ButtonDefaults.buttonColors(Color.Red)
+                colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
                 Text(if (correctAttempts == 3 || attempts == 3) "Next" else "Submit")
             }
