@@ -115,11 +115,12 @@ fun RandomFlag() {
 
         Column(modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(15, 77, 92)),
+            .background(color = Color(44, 64, 83)),
             horizontalAlignment = Alignment.CenterHorizontally) {
 
             Text(text = "Guess The Country",
                 style = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 20.sp),
+                color = Color.White,
                 modifier = Modifier.padding(vertical = 25.dp)
             )
             Box(
@@ -195,7 +196,7 @@ fun RandomFlag() {
             // Display the correct or incorrect message
 
             val correctPartColor = if (message.startsWith("Correct")) Color.Green else Color.Red
-            val incorrectPartColor = Color.Blue
+            val incorrectPartColor = Color.Red
 
             val correctPart = message.substringBefore(":").trim()
             val incorrectPart = message.substringAfter(":").trim()
@@ -209,14 +210,14 @@ fun RandomFlag() {
                         text = correctPart,
                         color = correctPartColor,
                         modifier = Modifier.padding(end = 4.dp),
-                        style = TextStyle(fontSize = 20.sp)
+                        style = TextStyle(fontSize = 25.sp)
                     )
                 }
                 if (message.startsWith("Wrong")) {
                     Text(
                         text = incorrectPart,
                         color = incorrectPartColor,
-                        style = TextStyle(fontSize = 20.sp)
+                        style = TextStyle(fontSize = 25.sp)
                     )
                 }
             }
@@ -225,11 +226,12 @@ fun RandomFlag() {
     }else{
         Column(modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(15, 77, 92))
+            .background(color = Color(44, 64, 83))
             .padding(horizontal = 40.dp)) {
 
             Text(text = "Guess The Country",
                 style = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 20.sp),
+                color = Color.White,
                 modifier = Modifier.padding(vertical = 25.dp)
             )
 
@@ -308,7 +310,7 @@ fun RandomFlag() {
                             // Display the correct or incorrect message
 
                             val correctPartColor = if (message.startsWith("Correct")) Color.Green else Color.Red
-                            val incorrectPartColor = Color.Blue
+                            val incorrectPartColor = Color.Red
 
                             val correctPart = message.substringBefore(":").trim()
                             val incorrectPart = message.substringAfter(":").trim()
@@ -322,14 +324,14 @@ fun RandomFlag() {
                                         text = correctPart,
                                         color = correctPartColor,
                                         modifier = Modifier.padding(end = 4.dp),
-                                        style = TextStyle(fontSize = 20.sp)
+                                        style = TextStyle(fontSize = 25.sp)
                                     )
                                 }
                                 if (message.startsWith("Wrong")) {
                                     Text(
                                         text = incorrectPart,
                                         color = incorrectPartColor,
-                                        style = TextStyle(fontSize = 20.sp)
+                                        style = TextStyle(fontSize = 25.sp)
                                     )
                                 }
                             }
