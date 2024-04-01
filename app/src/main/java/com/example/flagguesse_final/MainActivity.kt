@@ -131,7 +131,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Button(
                             onClick = {
-                                      if(timerEnabled){
+                                      if(!timerEnabled){
                                           val intent = Intent(this@MainActivity, GuessActivity::class.java)
                                           startActivity(intent)
                                       }else{
@@ -149,10 +149,12 @@ class MainActivity : ComponentActivity() {
                         Button(
                             onClick = {
 
-                                if(timerEnabled){
+                                if(!timerEnabled){
                                     val intent = Intent(this@MainActivity, HintActivity::class.java)
                                     startActivity(intent)
                                 }else{
+                                    val intent =Intent(this@MainActivity,HintActivity::class.java)
+                                    startActivity(intent)
 
                                 }
                             },
@@ -175,10 +177,12 @@ class MainActivity : ComponentActivity() {
                         Button(
                             onClick = {
 
-                                if(timerEnabled){
+                                if(!timerEnabled){
                                     val intent = Intent(this@MainActivity, GuessFlagActivity::class.java)
                                     startActivity(intent)
                                 }else{
+                                    val intent =Intent(this@MainActivity,GuessFlagActivity::class.java)
+                                    startActivity(intent)
 
                                 }
                             },
@@ -193,10 +197,12 @@ class MainActivity : ComponentActivity() {
                         Button(
                             onClick = {
 
-                                if(timerEnabled){
+                                if(!timerEnabled){
                                     val intent = Intent(this@MainActivity, AdvanceActivity::class.java)
                                     startActivity(intent)
                                 }else{
+                                    val intent =Intent(this@MainActivity,AdvanceActivity::class.java)
+                                    startActivity(intent)
 
                                 }
                             },
@@ -274,11 +280,13 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(
                                 onClick = {
-
-
-                                    val intent =
-                                        Intent(this@MainActivity, GuessActivity::class.java)
-                                    startActivity(intent)
+                                    if(!timerEnabled){
+                                        val intent = Intent(this@MainActivity, GuessActivity::class.java)
+                                        startActivity(intent)
+                                    }else{
+                                        val intent =Intent(this@MainActivity,GuessActivity::class.java)
+                                        startActivity(intent)
+                                    }
                                 },
 
                                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
@@ -293,9 +301,13 @@ class MainActivity : ComponentActivity() {
                             }
                             Button(
                                 onClick = {
-
-                                    val i = Intent(this@MainActivity, HintActivity::class.java)
-                                    startActivity(i)
+                                    if(!timerEnabled){
+                                        val intent = Intent(this@MainActivity, HintActivity::class.java)
+                                        startActivity(intent)
+                                    }else{
+                                        val intent =Intent(this@MainActivity,HintActivity::class.java)
+                                        startActivity(intent)
+                                    }
                                 },
 
                                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
@@ -315,9 +327,13 @@ class MainActivity : ComponentActivity() {
 
                             Button(
                                 onClick = {
-
-                                    val i = Intent(this@MainActivity, GuessFlagActivity::class.java)
-                                    startActivity(i)
+                                    if(!timerEnabled){
+                                        val intent = Intent(this@MainActivity, GuessFlagActivity::class.java)
+                                        startActivity(intent)
+                                    }else{
+                                        val intent =Intent(this@MainActivity,GuessFlagActivity::class.java)
+                                        startActivity(intent)
+                                    }
                                 },
 
                                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
@@ -329,9 +345,13 @@ class MainActivity : ComponentActivity() {
 
                             Button(
                                 onClick = {
-
-                                    val i = Intent(this@MainActivity, AdvanceActivity::class.java)
-                                    startActivity(i)
+                                    if(!timerEnabled){
+                                        val intent = Intent(this@MainActivity, AdvanceActivity::class.java)
+                                        startActivity(intent)
+                                    }else{
+                                        val intent =Intent(this@MainActivity,AdvanceActivity::class.java)
+                                        startActivity(intent)
+                                    }
                                 },
 
                                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
