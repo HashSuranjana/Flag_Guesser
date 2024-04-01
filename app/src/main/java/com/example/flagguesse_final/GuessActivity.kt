@@ -260,6 +260,10 @@ fun RandomFlag(Time:Boolean) {
                 modifier = Modifier.padding(vertical = 25.dp)
             )
 
+            if (Time){
+                BasicCountdownTimer()
+            }
+
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween) {
                     Box(

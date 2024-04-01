@@ -52,7 +52,9 @@ class GuessFlagActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(), // Fill the entire size of the screen
                     color = MaterialTheme.colorScheme.background // Set the background color from the theme
                 ) {
-                    GuessFlagGame() // Call the GuessFlagGame composable
+                    val time = intent.getBooleanExtra("Timer",false)
+                    println(time)
+                    GuessFlagGame(time) // Call the GuessFlagGame composable
                 }
             }
         }
@@ -62,7 +64,7 @@ class GuessFlagActivity : ComponentActivity() {
 
 
 @Composable
-fun GuessFlagGame() {
+fun GuessFlagGame(Time:Boolean) {
     var isSubmitted by rememberSaveable { mutableStateOf(false) } // State for tracking if the guess is submitted
     var isCorrect by rememberSaveable { mutableStateOf<Boolean?>(null) } // State for tracking if the guess is correct
     var countryCode by rememberSaveable { mutableStateOf(Data().countryCodes.random()) } // State for storing the randomly selected country code
@@ -96,6 +98,10 @@ fun GuessFlagGame() {
                     fontWeight = FontWeight.Bold
                 ),color = Color.White
             )
+
+            if (Time){
+                BasicCountdownTimer()
+            }
 
             if (shuffledFlags.isEmpty()) { // Check if shuffled flags list is empty
                 shuffledFlags = (remainingFlags.shuffled()
@@ -206,6 +212,10 @@ fun GuessFlagGame() {
                 ), modifier = Modifier.padding(vertical = 15.dp),color = Color.White
             )
 
+            if (Time){
+                BasicCountdownTimer()
+            }
+
 
             Row(horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
@@ -314,6 +324,6 @@ fun GuessFlagGame() {
 @Composable
 fun DefaultPreview() {
     FlagGuessefinalTheme {
-        GuessFlagGame() // Call the GuessFlagGame composable
+        GuessFlagGame(true) // Call the GuessFlagGame composable
     }
 }

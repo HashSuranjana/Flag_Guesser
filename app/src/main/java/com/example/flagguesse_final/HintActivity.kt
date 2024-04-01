@@ -52,7 +52,9 @@ class HintActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Hint() // call the Hint() composable function
+                    val time = intent.getBooleanExtra("Timer",false)
+                    println(time)
+                    Hint(time) // call the Hint() composable function
                 }
             }
         }
@@ -60,7 +62,7 @@ class HintActivity : ComponentActivity() {
 }
 
 @Composable
-fun Hint() {
+fun Hint(Time:Boolean) {
     val countryCodes = remember { Data().countryCodes }
     val countryFlags = remember { Data().countryFlags }
     val countryNameMap = remember { Data().country_names }
@@ -91,6 +93,10 @@ fun Hint() {
                 style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 27.sp),
                 color = Color.White
             )
+
+            if (Time){
+                BasicCountdownTimer()
+            }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -184,6 +190,9 @@ fun Hint() {
                 style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 27.sp),
                 color = Color.White
             )
+            if (Time){
+                BasicCountdownTimer()
+            }
             Row(horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()){
@@ -276,7 +285,7 @@ fun Hint() {
 @Composable
 fun GreetingPreview2() {
     FlagGuessefinalTheme {
-        Hint()
+        Hint(true)
     }
 }
 

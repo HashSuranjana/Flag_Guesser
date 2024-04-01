@@ -82,6 +82,10 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                 .background(color = Color(44, 64, 83)),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
+
+            if (Time){
+                BasicCountdownTimer()
+            }
             countryCodes.forEachIndexed { index, countryCode ->
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -189,6 +193,9 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                 modifier = Modifier.fillMaxWidth()
 
             ) {
+                if (Time){
+                    BasicCountdownTimer()
+                }
                 countryCodes.forEachIndexed { index, countryCode ->
                     Row(horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
