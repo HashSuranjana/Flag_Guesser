@@ -48,12 +48,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
 
 
 class GuessActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
 
 
@@ -105,6 +107,7 @@ fun RandomFlag() {
     var isAnswered by rememberSaveable { mutableStateOf(false) }
 
     var message by rememberSaveable { mutableStateOf("") }
+
 
     val orientation = LocalConfiguration.current.orientation
 

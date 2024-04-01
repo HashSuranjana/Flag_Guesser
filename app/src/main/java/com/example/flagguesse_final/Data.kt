@@ -2,6 +2,7 @@ package com.example.flagguesse_final
 
 class Data {
 
+    //This is the list of Country Codes
     val countryCodes = listOf(
         "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR", "AS", "AT", "AU", "AW", "AX", "AZ", "BA", "BB", "BD", "BE",
         "BF", "BG", "BH", "BI", "BJ", "BL", "BM", "BN", "BO", "BR", "BS", "BT", "BV", "BW", "BY", "BZ", "CA", "CC", "CD",
@@ -18,6 +19,7 @@ class Data {
         "UZ", "VA", "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "XK", "YE", "ZA", "ZM", "ZW"
     )
 
+    //This is the map that connect country code and its corresponding flag image000000
     val countryFlags = mapOf(
         "AD" to R.drawable.ad,
         "AE" to R.drawable.ae,

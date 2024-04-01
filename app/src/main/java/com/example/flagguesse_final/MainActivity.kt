@@ -26,10 +26,12 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +43,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
-import kotlin.concurrent.timer
+import kotlinx.coroutines.delay
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,113 +60,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val orientation = LocalConfiguration.current.orientation
-                    if (orientation == Configuration.ORIENTATION_PORTRAIT){
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = Color(150, 174, 196)),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.SpaceBetween
-                        ) {
-
-                            Box(modifier = Modifier
-                                .fillMaxWidth()
-                                .height(500.dp) ){
-                                Image(painter = painterResource(id = R.drawable.bgimage), contentDescription = null,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .fillMaxHeight()
-                                )
-                            }
-
-                            var timerEnabled by remember { mutableStateOf(false) }
-                            var timeLeft by remember { mutableStateOf(10) }
-
-                            if (timerEnabled) {
-                                CountdownTimer(timeLeft = timeLeft)
-                            }
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 16.dp),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                Switch(
-                                    checked = timerEnabled,
-                                    onCheckedChange = { isChecked ->
-                                        timerEnabled = isChecked
-                                        if (!isChecked) {
-                                            // Reset the timer if switch is turned off
-                                            timeLeft = 10
-                                        }
-                                    },
-                                    colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = "Enable Timer",
-
-                                )
-                            }
-
-                            MyButtons()
-                        }
-                    }else{
-                        Row(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = Color(150, 174, 196)),
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-
-                            Box(modifier = Modifier
-                                .height(500.dp) ){
-                                Image(painter = painterResource(id = R.drawable.bgimage), contentDescription = null,
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                )
-                            }
-
-                            var timerEnabled by remember { mutableStateOf(false) }
-                            var timeLeft by remember { mutableStateOf(10) }
-
-                            if (timerEnabled) {
-                                CountdownTimer(timeLeft = timeLeft)
-                            }
-
-                            Column (horizontalAlignment = Alignment.CenterHorizontally){
-                                Row(
-                                    modifier = Modifier
-
-                                        .padding(top = 16.dp),
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    Switch(
-                                        checked = timerEnabled,
-                                        onCheckedChange = { isChecked ->
-                                            timerEnabled = isChecked
-                                            if (!isChecked) {
-                                                // Reset the timer if switch is turned off
-                                                timeLeft = 10
-                                            }
-                                        },
-                                        colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = "Enable Timer",
-
-                                        )
-                                }
-
-                                MyButtons()
-                            }
-                        }
-
-                    }
+                    MyButtons()
                 }
             }
         }
@@ -167,105 +68,8 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun MyButtons() {
-        Column (
-
-            modifier = Modifier
-                .height(150.dp)
-                .width(500.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround){
-
-            Row(
-
-                modifier = Modifier.width(300.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-
-            ) {
-                Button(onClick = {
-
-                    var intent = Intent(this@MainActivity, GuessActivity::class.java)
-                    startActivity(intent)},
-
-                    colors = ButtonDefaults.buttonColors(Color(110, 39, 89))) {
-
-                    Text(text = "Guess Country", color = Color.White, style = TextStyle(fontWeight = FontWeight.Bold))
-
-                }
-                Button(onClick = {
-
-                    var i = Intent(this@MainActivity,HintActivity::class.java)
-                    startActivity(i) },
-
-                    colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
-                    )  {
-
-                    Text(text = "Guess-Hints", color = Color.White)
-
-                }
-            }
-
-            Row (
-                modifier = Modifier.width(300.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-
-            ) {
-
-                Button(onClick = {
-
-                    var i = Intent(this@MainActivity,GuessFlagActivity::class.java)
-                    startActivity(i) },
-
-                    colors = ButtonDefaults.buttonColors(Color(110, 39, 89))) {
-
-                    Text(text = "Guess Flag", color = Color.White)
-
-                }
-
-                Button(onClick = {
-
-                    var i = Intent(this@MainActivity,AdvanceActivity::class.java)
-                    startActivity(i) },
-
-                    colors = ButtonDefaults.buttonColors(Color(110, 39, 89))) {
-
-                    Text(text = "Advance-Level", color = Color.White)
-
-                }
-            }
-        }
-    }
-
-
-
-    @Composable
-    fun CountdownTimer(timeLeft: Int) {
-        var currentSeconds by remember { mutableStateOf(timeLeft) }
-
-        DisposableEffect(Unit) {
-            val timer = timer(period = 1000) {
-                currentSeconds--
-                if (currentSeconds <= 0) {
-                    cancel()
-                }
-            }
-
-            onDispose {
-                timer.cancel()
-            }
-        }
-
-        Text(
-            text = "Time Left: $currentSeconds seconds",
-
-        )
-    }
-
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        FlagGuessefinalTheme {
+        val orientation = LocalConfiguration.current.orientation
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -274,22 +78,21 @@ class MainActivity : ComponentActivity() {
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
 
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(500.dp) ){
-                    Image(painter = painterResource(id = R.drawable.bgimage), contentDescription = null,
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(500.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.bgimage),
+                        contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight()
                     )
                 }
 
-                var timerEnabled by remember { mutableStateOf(false) }
-                var timeLeft by remember { mutableStateOf(10) }
-
-                if (timerEnabled) {
-                    CountdownTimer(timeLeft = timeLeft)
-                }
+                var timerEnabled by rememberSaveable { mutableStateOf(false) }
 
                 Row(
                     modifier = Modifier
@@ -301,10 +104,6 @@ class MainActivity : ComponentActivity() {
                         checked = timerEnabled,
                         onCheckedChange = { isChecked ->
                             timerEnabled = isChecked
-                            if (!isChecked) {
-                                // Reset the timer if switch is turned off
-                                timeLeft = 10
-                            }
                         },
                         colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
                     )
@@ -314,10 +113,245 @@ class MainActivity : ComponentActivity() {
 
                         )
                 }
+                Column(
 
-                MyButtons()
+                    modifier = Modifier
+                        .height(150.dp)
+                        .width(500.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceAround
+                ) {
+
+                    Row(
+
+                        modifier = Modifier.width(300.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+
+                    ) {
+                        Button(
+                            onClick = {
+                                      if(timerEnabled){
+                                          val intent = Intent(this@MainActivity, GuessActivity::class.java)
+                                          startActivity(intent)
+                                      }else{
+                                          val intent =Intent(this@MainActivity,GuessActivity::class.java)
+                                          startActivity(intent)
+                                      }
+                            },
+
+                            colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+                        ) {
+
+                            Text(text = "Guess Country", color = Color.White)
+
+                        }
+                        Button(
+                            onClick = {
+
+                                if(timerEnabled){
+                                    val intent = Intent(this@MainActivity, HintActivity::class.java)
+                                    startActivity(intent)
+                                }else{
+
+                                }
+                            },
+
+                            colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+                        ) {
+
+                            Text(text = "Guess-Hints", color = Color.White)
+
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier.width(300.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+
+                    ) {
+
+                        Button(
+                            onClick = {
+
+                                if(timerEnabled){
+                                    val intent = Intent(this@MainActivity, GuessFlagActivity::class.java)
+                                    startActivity(intent)
+                                }else{
+
+                                }
+                            },
+
+                            colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+                        ) {
+
+                            Text(text = "Guess Flag", color = Color.White)
+
+                        }
+
+                        Button(
+                            onClick = {
+
+                                if(timerEnabled){
+                                    val intent = Intent(this@MainActivity, AdvanceActivity::class.java)
+                                    startActivity(intent)
+                                }else{
+
+                                }
+                            },
+
+                            colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+                        ) {
+
+                            Text(text = "Advance-Level", color = Color.White)
+
+                        }
+                    }
+                }
             }
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color(150, 174, 196)),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
+                Box(
+                    modifier = Modifier
+                        .height(500.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.bgimage),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                    )
+                }
+
+                var timerEnabled by remember { mutableStateOf(false) }
+
+
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Row(
+                        modifier = Modifier
+
+                            .padding(top = 16.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Switch(
+                            checked = timerEnabled,
+                            onCheckedChange = { isChecked ->
+                                timerEnabled = isChecked
+                            },
+                            colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Enable Timer",
+
+                            )
+                    }
+
+                    Column(
+
+                        modifier = Modifier
+                            .height(150.dp)
+                            .width(500.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.SpaceAround
+                    ) {
+
+                        Row(
+
+                            modifier = Modifier.width(300.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+
+                        ) {
+                            Button(
+                                onClick = {
+
+
+                                    val intent =
+                                        Intent(this@MainActivity, GuessActivity::class.java)
+                                    startActivity(intent)
+                                },
+
+                                colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+                            ) {
+
+                                Text(
+                                    text = "Guess Country",
+                                    color = Color.White,
+                                    style = TextStyle(fontWeight = FontWeight.Bold)
+                                )
+
+                            }
+                            Button(
+                                onClick = {
+
+                                    val i = Intent(this@MainActivity, HintActivity::class.java)
+                                    startActivity(i)
+                                },
+
+                                colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+                            ) {
+
+                                Text(text = "Guess-Hints", color = Color.White)
+
+                            }
+                        }
+
+                        Row(
+                            modifier = Modifier.width(300.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+
+                        ) {
+
+                            Button(
+                                onClick = {
+
+                                    val i = Intent(this@MainActivity, GuessFlagActivity::class.java)
+                                    startActivity(i)
+                                },
+
+                                colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+                            ) {
+
+                                Text(text = "Guess Flag", color = Color.White)
+
+                            }
+
+                            Button(
+                                onClick = {
+
+                                    val i = Intent(this@MainActivity, AdvanceActivity::class.java)
+                                    startActivity(i)
+                                },
+
+                                colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+                            ) {
+
+                                Text(text = "Advance-Level", color = Color.White)
+
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+    @Preview(showBackground = true)
+    @Composable
+    fun DefaultPreview() {
+        FlagGuessefinalTheme {
+            MyButtons()
         }
     }
 }

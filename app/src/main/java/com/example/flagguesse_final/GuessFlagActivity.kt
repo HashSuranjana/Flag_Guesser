@@ -77,6 +77,7 @@ fun GuessFlagGame() {
 
     val remainingFlags = rememberSaveable { flagIds.filterNot { it == countryflag } } // List of remaining flag image resource ids
 
+
     val orientation = LocalConfiguration.current.orientation
 
     if (orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -204,6 +205,7 @@ fun GuessFlagGame() {
                     fontWeight = FontWeight.Bold
                 ), modifier = Modifier.padding(vertical = 15.dp)
             )
+
 
             Row(horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
