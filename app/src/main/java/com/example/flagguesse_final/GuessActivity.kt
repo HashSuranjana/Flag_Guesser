@@ -54,6 +54,7 @@ import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
 
 class GuessActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
         setContent {
@@ -66,7 +67,8 @@ class GuessActivity: ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
+                    val time = intent.getBooleanExtra("Timer",false)
+                    println(time)
                     RandomFlag()
 
                 }
@@ -78,7 +80,7 @@ class GuessActivity: ComponentActivity() {
     fun DefaultPreview() {
         FlagGuessefinalTheme {
 
-            RandomFlag()
+
 
         }
     }
@@ -96,17 +98,19 @@ fun RandomFlag() {
 
     val countryNames = countryNameMap.values.toList()  //Get the values of the map country_name and convert into a list
 
-    var expanded by rememberSaveable { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) } //initialize the dropdown menu
 
-    var selectedItem by rememberSaveable { mutableStateOf("Select Country") }
+    var selectedItem by rememberSaveable { mutableStateOf("Select Country") } // Initialize the item in the dropdown menu
 
-    var randomCountryCode by rememberSaveable { mutableStateOf(countryCodes.random()) }
+    var randomCountryCode by rememberSaveable { mutableStateOf(countryCodes.random()) } //generate random flag from the
 
     var correctCountryName by rememberSaveable { mutableStateOf(countryNameMap[randomCountryCode] ?: "") }
 
     var isAnswered by rememberSaveable { mutableStateOf(false) }
 
     var message by rememberSaveable { mutableStateOf("") }
+
+
 
 
     val orientation = LocalConfiguration.current.orientation
@@ -123,6 +127,7 @@ fun RandomFlag() {
                 color = Color.White,
                 modifier = Modifier.padding(vertical = 25.dp)
             )
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -283,7 +288,7 @@ fun RandomFlag() {
 
                             Button(
                                 modifier = Modifier
-                                    .offset(x=30.dp,y=100.dp)
+                                    .offset(x = 30.dp, y = 100.dp)
                                     .width(200.dp),
 
                                 onClick = {

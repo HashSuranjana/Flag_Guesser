@@ -77,7 +77,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(15, 77, 92)),
+                .background(color = Color(44, 64, 83)),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             countryCodes.forEachIndexed { index, countryCode ->
@@ -169,13 +169,14 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
             // Display total marks obtained by the user
             Text(
                 text = "Marks: $totalMarks / 3",
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
+                color = Color.White
             )
         }
     }else{
         Column(modifier = Modifier
             .fillMaxHeight()
-            .background(color = Color(15, 77, 92))
+            .background(color = Color(44, 64, 83))
             .padding(top = 60.dp),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally) {
@@ -284,7 +285,8 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
                 text = "Marks: $totalMarks / 3",
                 modifier = Modifier
                     .padding(8.dp)
-                    .offset(x=340.dp,y=-320.dp)
+                    .offset(x=340.dp,y=-320.dp),
+                color = Color.White
             )
         }
     }

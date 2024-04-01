@@ -52,7 +52,7 @@ class HintActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Hint()
+                    Hint() // call the Hint() composable function
                 }
             }
         }
@@ -80,7 +80,7 @@ fun Hint() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(15, 77, 92)),
+                .background(color = Color(44, 64, 83)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -88,7 +88,8 @@ fun Hint() {
                 text = "Think and Guess the Country",
 
                 modifier = Modifier.padding(vertical = 3.dp),
-                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 27.sp)
+                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 27.sp),
+                color = Color.White
             )
             Box(
                 modifier = Modifier
@@ -172,7 +173,7 @@ fun Hint() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(15, 77, 92)),
+                .background(color = Color(44, 64, 83)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -180,7 +181,8 @@ fun Hint() {
                 text = "Think and Guess the Country",
 
                 modifier = Modifier.padding(vertical = 3.dp),
-                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 27.sp)
+                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 27.sp),
+                color = Color.White
             )
             Row(horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
@@ -211,7 +213,7 @@ fun Hint() {
                                 append(if (guessedLetters[i].isBlank()) "-" else guessedLetters[i])
                                 append(" ")
                             }
-                        },
+                        }, color = Color.White,
 
                         modifier = Modifier.padding(vertical = 16.dp)
                     )
@@ -220,6 +222,7 @@ fun Hint() {
                         onValueChange = { userInput = it },
                         label = { Text(text = "Enter a letter") },
                         modifier = Modifier.padding(bottom = 16.dp)
+
                     )
                     Button(
                         onClick = {

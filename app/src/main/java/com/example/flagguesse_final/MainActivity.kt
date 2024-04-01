@@ -131,13 +131,9 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Button(
                             onClick = {
-                                      if(!timerEnabled){
-                                          val intent = Intent(this@MainActivity, GuessActivity::class.java)
-                                          startActivity(intent)
-                                      }else{
-                                          val intent =Intent(this@MainActivity,GuessActivity::class.java)
-                                          startActivity(intent)
-                                      }
+                                val intent = Intent(this@MainActivity, GuessActivity::class.java)
+                                intent.putExtra("TimerEnabled", timerEnabled)
+                                startActivity(intent)
                             },
 
                             colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
@@ -149,14 +145,9 @@ class MainActivity : ComponentActivity() {
                         Button(
                             onClick = {
 
-                                if(!timerEnabled){
-                                    val intent = Intent(this@MainActivity, HintActivity::class.java)
-                                    startActivity(intent)
-                                }else{
-                                    val intent =Intent(this@MainActivity,HintActivity::class.java)
-                                    startActivity(intent)
-
-                                }
+                                val intent = Intent(this@MainActivity, HintActivity::class.java)
+                                intent.putExtra("TimerEnabled", timerEnabled)
+                                startActivity(intent)
                             },
 
                             colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
@@ -177,14 +168,9 @@ class MainActivity : ComponentActivity() {
                         Button(
                             onClick = {
 
-                                if(!timerEnabled){
-                                    val intent = Intent(this@MainActivity, GuessFlagActivity::class.java)
-                                    startActivity(intent)
-                                }else{
-                                    val intent =Intent(this@MainActivity,GuessFlagActivity::class.java)
-                                    startActivity(intent)
-
-                                }
+                                val intent = Intent(this@MainActivity, GuessFlagActivity::class.java)
+                                intent.putExtra("TimerEnabled", timerEnabled)
+                                startActivity(intent)
                             },
 
                             colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
@@ -197,14 +183,9 @@ class MainActivity : ComponentActivity() {
                         Button(
                             onClick = {
 
-                                if(!timerEnabled){
-                                    val intent = Intent(this@MainActivity, AdvanceActivity::class.java)
-                                    startActivity(intent)
-                                }else{
-                                    val intent =Intent(this@MainActivity,AdvanceActivity::class.java)
-                                    startActivity(intent)
-
-                                }
+                                val intent = Intent(this@MainActivity, AdvanceActivity::class.java)
+                                intent.putExtra("TimerEnabled", timerEnabled)
+                                startActivity(intent)
                             },
 
                             colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
@@ -252,6 +233,7 @@ class MainActivity : ComponentActivity() {
                             checked = timerEnabled,
                             onCheckedChange = { isChecked ->
                                 timerEnabled = isChecked
+
                             },
                             colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
                         )
@@ -280,13 +262,9 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(
                                 onClick = {
-                                    if(!timerEnabled){
-                                        val intent = Intent(this@MainActivity, GuessActivity::class.java)
-                                        startActivity(intent)
-                                    }else{
-                                        val intent =Intent(this@MainActivity,GuessActivity::class.java)
-                                        startActivity(intent)
-                                    }
+                                    val intent = Intent(this@MainActivity, GuessActivity::class.java)
+                                    intent.putExtra("TimerEnabled", timerEnabled)
+                                    startActivity(intent)
                                 },
 
                                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
@@ -301,13 +279,9 @@ class MainActivity : ComponentActivity() {
                             }
                             Button(
                                 onClick = {
-                                    if(!timerEnabled){
-                                        val intent = Intent(this@MainActivity, HintActivity::class.java)
-                                        startActivity(intent)
-                                    }else{
-                                        val intent =Intent(this@MainActivity,HintActivity::class.java)
-                                        startActivity(intent)
-                                    }
+                                    val intent = Intent(this@MainActivity, HintActivity::class.java)
+                                    intent.putExtra("TimerEnabled", timerEnabled)
+                                    startActivity(intent)
                                 },
 
                                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
@@ -327,13 +301,9 @@ class MainActivity : ComponentActivity() {
 
                             Button(
                                 onClick = {
-                                    if(!timerEnabled){
-                                        val intent = Intent(this@MainActivity, GuessFlagActivity::class.java)
-                                        startActivity(intent)
-                                    }else{
-                                        val intent =Intent(this@MainActivity,GuessFlagActivity::class.java)
-                                        startActivity(intent)
-                                    }
+                                    val intent = Intent(this@MainActivity, GuessFlagActivity::class.java)
+                                    intent.putExtra("TimerEnabled", timerEnabled)
+                                    startActivity(intent)
                                 },
 
                                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
@@ -345,13 +315,9 @@ class MainActivity : ComponentActivity() {
 
                             Button(
                                 onClick = {
-                                    if(!timerEnabled){
-                                        val intent = Intent(this@MainActivity, AdvanceActivity::class.java)
-                                        startActivity(intent)
-                                    }else{
-                                        val intent =Intent(this@MainActivity,AdvanceActivity::class.java)
-                                        startActivity(intent)
-                                    }
+                                    val intent = Intent(this@MainActivity, AdvanceActivity::class.java)
+                                    intent.putExtra("TimerEnabled", timerEnabled)
+                                    startActivity(intent)
                                 },
 
                                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))

@@ -84,7 +84,7 @@ fun GuessFlagGame() {
         Column(
             modifier = Modifier
                 .fillMaxSize() // Fill the entire size of the parent
-                .background(color = Color(15, 77, 92)), // Add padding around the column
+                .background(color = Color(44, 64, 83)), // Add padding around the column
             horizontalAlignment = Alignment.CenterHorizontally, // Align content horizontally to the center
             verticalArrangement = Arrangement.SpaceAround // Arrange content vertically with equal space around
         ) {
@@ -94,7 +94,7 @@ fun GuessFlagGame() {
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
-                )
+                ),color = Color.White
             )
 
             if (shuffledFlags.isEmpty()) { // Check if shuffled flags list is empty
@@ -105,7 +105,7 @@ fun GuessFlagGame() {
             shuffledFlags.forEachIndexed { index, flagResourceId -> // Iterate through shuffled flags
                 val isSelected = selectedFlagIndex == index // Check if current flag is selected
                 val boxColor =
-                    if (isCorrect != null && index == 2 && isCorrect!!) Color.Green else if (isCorrect != null && index == 2 && !isCorrect!!) Color.Red else if (isSelected) Color(225, 200, 225) else Color(150, 200, 220) // Define box color based on correctness and selection
+                    if (isCorrect != null && isCorrect!!) Color.Green else if (isCorrect != null && !isCorrect!!) Color.Red else if (isSelected) Color(225, 200, 225) else Color(150, 200, 220) // Define box color based on correctness and selection
                 Box(
                     modifier = Modifier
                         .size(200.dp) // Set the size of the box
@@ -193,7 +193,7 @@ fun GuessFlagGame() {
         Column(
             modifier = Modifier
                 .fillMaxSize() // Fill the entire size of the parent
-                .background(color = Color(15, 77, 92)), // Add padding around the column
+                .background(color = Color(44, 64, 83)), // Add padding around the column
             horizontalAlignment = Alignment.CenterHorizontally, // Align content horizontally to the center
             verticalArrangement = Arrangement.SpaceBetween // Arrange content vertically with equal space around
         ) {
@@ -203,7 +203,7 @@ fun GuessFlagGame() {
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
-                ), modifier = Modifier.padding(vertical = 15.dp)
+                ), modifier = Modifier.padding(vertical = 15.dp),color = Color.White
             )
 
 
