@@ -183,9 +183,13 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
         Column(modifier = Modifier
             .fillMaxHeight()
             .background(color = Color(44, 64, 83))
-            .padding(top = 60.dp),
+            .padding(top = 35.dp),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally) {
+
+            if (Time){
+                BasicCountdownTimer()
+            }
 
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,
@@ -193,9 +197,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                 modifier = Modifier.fillMaxWidth()
 
             ) {
-                if (Time){
-                    BasicCountdownTimer()
-                }
+
                 countryCodes.forEachIndexed { index, countryCode ->
                     Row(horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
