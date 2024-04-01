@@ -99,7 +99,7 @@ fun BasicCountdownTimer() {
         }
     }
 
-    Text(text = "Time left: $timeLeft")
+    Text(text = "Time left: $timeLeft", color = Color.White)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -367,13 +367,11 @@ fun RandomFlag(Time:Boolean) {
 
                         }
                     }
+                }
             }
 
-
         }
-
     }
-}
 
 
 
