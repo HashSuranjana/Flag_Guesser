@@ -32,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
+import kotlinx.coroutines.delay
 
 
 class GuessActivity: ComponentActivity() {
@@ -69,7 +71,7 @@ class GuessActivity: ComponentActivity() {
                 ) {
                     val time = intent.getBooleanExtra("Timer",false)
                     println(time)
-                    RandomFlag()
+                    RandomFlag(time)
 
                 }
             }
@@ -86,9 +88,23 @@ class GuessActivity: ComponentActivity() {
     }
 }
 
+@Composable
+fun BasicCountdownTimer() {
+    var timeLeft by remember { mutableStateOf(10) }
+
+    LaunchedEffect(key1 = timeLeft) {
+        while (timeLeft > 0) {
+            delay(1000L)
+            timeLeft--
+        }
+    }
+
+    Text(text = "Time left: $timeLeft")
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RandomFlag() {
+fun RandomFlag(Time:Boolean) {
 
     val countryCodes = remember { Data().countryCodes } // Get the list of country codes from the Data class
 
@@ -127,6 +143,10 @@ fun RandomFlag() {
                 color = Color.White,
                 modifier = Modifier.padding(vertical = 25.dp)
             )
+
+            if (Time){
+                BasicCountdownTimer()
+            }
 
             Box(
                 modifier = Modifier

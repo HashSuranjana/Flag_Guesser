@@ -51,8 +51,10 @@ class AdvanceActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val time = intent.getBooleanExtra("Timer",false)
+                    println(time)
                     val randomCountryCodes = remember { Data().countryCodes.shuffled().take(3) }
-                    DisplayFlagsAndInputs(randomCountryCodes)
+                    DisplayFlagsAndInputs(randomCountryCodes,time)
                 }
             }
         }
@@ -60,7 +62,7 @@ class AdvanceActivity : ComponentActivity() {
 }
 
 @Composable
-fun DisplayFlagsAndInputs(randomCountryCodes: List<String>) {
+fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
     var countryCodes by rememberSaveable { mutableStateOf(randomCountryCodes.shuffled().take(3)) }
     var countryFlags by rememberSaveable { mutableStateOf(countryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad }) }
     val countryNames = remember { mutableStateListOf("", "", "") }
@@ -307,6 +309,6 @@ inline fun <T> Iterable<T>.countIndexed(predicate: (Int, T) -> Boolean): Int {
 fun DefaultPreview2() {
     FlagGuessefinalTheme {
         val randomCountryCodes = remember { Data().countryCodes.shuffled().take(3) }
-        DisplayFlagsAndInputs(randomCountryCodes)
+        DisplayFlagsAndInputs(randomCountryCodes,false)
     }
 }
