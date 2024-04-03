@@ -38,13 +38,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
 import kotlinx.coroutines.delay
 
-class AdvanceActivity : ComponentActivity() {
 
+class AdvanceActivity : ComponentActivity() { // Activity of Advanced Level
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -53,44 +52,57 @@ class AdvanceActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val time = intent.getBooleanExtra("Timer",false)
-                    println(time)
-                    val randomCountryCodes = remember { Data().countryCodes.shuffled().take(3) }
-                    DisplayFlagsAndInputs(randomCountryCodes,time)
+
+                    val time = intent.getBooleanExtra("Timer", false) // Extracting time value from intent extras
+
+                    val randomCountryCodes = remember { CountryInfo().countryCodes.shuffled().take(3) } // Generating random country codes
+
+                    AdvancedActivity(randomCountryCodes, time)
                 }
             }
         }
     }
 }
 
+// Composable function for displaying Flags and Inputs
 @Composable
-fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
-    var countryCodes by rememberSaveable { mutableStateOf(randomCountryCodes.shuffled().take(3)) }
-    var countryFlags by rememberSaveable { mutableStateOf(countryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad }) }
-    val countryNames = remember { mutableStateListOf("", "", "") }
+fun AdvancedActivity(randomCountryCodes: List<String>, Time: Boolean) {
 
-    var attempts by rememberSaveable { mutableStateOf(0) }
-    var correctAttempts by rememberSaveable { mutableStateOf(0) }
-    var submitted by rememberSaveable { mutableStateOf(false) }
-    var totalMarks by rememberSaveable { mutableStateOf(0) }
+    var countryCodes by rememberSaveable { mutableStateOf(randomCountryCodes.shuffled().take(3)) } // Mutable state variable for country codes
 
-    val timeValue by remember { mutableStateOf(10) }
+    var countryFlags by rememberSaveable { mutableStateOf(countryCodes.map { code -> CountryInfo().countryFlags[code] ?: R.drawable.ad }) } // Mutable state variable for flags
 
-    var timeLeft by rememberSaveable { mutableStateOf(timeValue) }
+    var attempts by rememberSaveable { mutableStateOf(0) } // Mutable state variable for user attempts
 
-    val orientation = LocalConfiguration.current.orientation
+    val countryNames = remember { mutableStateListOf("", "", "") } // Mutable state variable for Country names
 
-    if (orientation == Configuration.ORIENTATION_PORTRAIT){
+    var correctAttempts by rememberSaveable { mutableStateOf(0) } // Mutable state variable for user's correct attempts
+
+    var totalMarks by rememberSaveable { mutableStateOf(0) } // Mutable state variables for total marks
+
+    var submitted by rememberSaveable { mutableStateOf(false) } // Mutable state variable to check submitted or not
+
+    val timeValue by remember { mutableStateOf(10) } // Immutable state variables for add time's value
+
+    var timeLeft by rememberSaveable { mutableStateOf(timeValue) } // Mutable state variables for time left
+
+    //https://medium.com/@rzmeneghelo/adapt-with-ease-mastering-orientation-changes-in-jetpack-compose-5a298da703d0#:~:text=The%20first%20step%20in%20managing,is%20easily%20accessible%20via%20LocalConfiguration%20.&text=In%20this%20snippet%3A,LocalConfiguration.
+    val orientation = LocalConfiguration.current.orientation // Configuring screen orientation
+
+
+    if (orientation == Configuration.ORIENTATION_PORTRAIT) { // if orientation is Portrait
+
         Column(
+
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = Color(44, 64, 83)),
             verticalArrangement = Arrangement.SpaceBetween
+
         ) {
 
-            if (Time){
-
+            if (Time) { // Displaying time left if switch is enabled
 
                 LaunchedEffect(key1 = timeLeft) {
                     while (timeLeft > 0) {
@@ -98,12 +110,14 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                         timeLeft--
                     }
 
-                    if(timeLeft ==0){
+                    if (timeLeft == 0) {
+                        // Handling end of time
                         if (correctAttempts == 3 || attempts == 3) {
-                            // Generate new set of random country codes
-                            val newRandomCountryCodes = Data().countryCodes.shuffled().take(3)
+
+                            // Reset the values and Generating new values
+                            val newRandomCountryCodes = CountryInfo().countryCodes.shuffled().take(3)
                             countryCodes = newRandomCountryCodes
-                            countryFlags = newRandomCountryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad }
+                            countryFlags = newRandomCountryCodes.map { code -> CountryInfo().countryFlags[code] ?: R.drawable.ad }
                             countryNames.clear()
                             countryNames.addAll(listOf("", "", ""))
                             attempts = 0
@@ -112,43 +126,47 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
 
                         } else {
                             if (!submitted) {
+                                //Submit buttons functioning
                                 submitted = true
                                 attempts++
                                 correctAttempts = countryNames.countIndexed { index, name ->
-                                    name == Data().country_names[countryCodes[index]]
+                                    name == CountryInfo().country_names[countryCodes[index]]
                                 }
                                 totalMarks = correctAttempts
-
 
                             } else {
                                 attempts++
                             }
                         }
                     }
-
                 }
                 Text(text = "Time left: $timeLeft", color = Color.White)
-
             }
+
+            // Displaying each flag and input field
+
             countryCodes.forEachIndexed { index, countryCode ->
+
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .padding(vertical = 2.dp)
                         .fillMaxWidth()
                 ) {
-                    Box(modifier = Modifier
-                        .width(150.dp)
-                        .height(120.dp)
-                        .background(color = Color(150, 200, 220), shape = RoundedCornerShape(16.dp)),
-                        contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier = Modifier
+                            .width(150.dp)
+                            .height(120.dp)
+                            .background(color = Color(150, 200, 220), shape = RoundedCornerShape(16.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
                         Image(
                             painter = painterResource(id = countryFlags[index]),
                             contentDescription = null,
                             modifier = Modifier.size(100.dp)
                         )
                     }
-                    val isCorrect = countryNames[index] == Data().country_names[countryCode]
+                    val isCorrect = countryNames[index] == CountryInfo().country_names[countryCode]
                     val isEditable = !submitted || (submitted && !isCorrect && attempts < 3)
 
                     val backgroundColor = when {
@@ -157,6 +175,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                         else -> Color.Transparent
                     }
 
+                    // Input field for country name of the flag
                     OutlinedTextField(
                         value = countryNames[index],
                         onValueChange = {
@@ -171,138 +190,140 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                             .background(color = backgroundColor),
                         enabled = isEditable
                     )
+                    // Displaying correct country name if submission is incorrect after attempts
                     if (!isCorrect && submitted && attempts == 3) {
                         Text(
-                            text = Data().country_names[countryCode] ?: "",
+                            text = CountryInfo().country_names[countryCode] ?: "",
                             modifier = Modifier.padding(start = 8.dp),
                             color = Color.Red
                         )
                     }
                 }
             }
-
+            // Button
             Button(
                 onClick = {
                     if ((correctAttempts == 3 || attempts == 3) || timeLeft == 0) {
-                        // Generate new set of random country codes
-                        val newRandomCountryCodes = Data().countryCodes.shuffled().take(3)
+                        // Reset and generate new Values
+                        val newRandomCountryCodes = CountryInfo().countryCodes.shuffled().take(3)
                         countryCodes = newRandomCountryCodes
-                        countryFlags = newRandomCountryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad }
+                        countryFlags = newRandomCountryCodes.map { code -> CountryInfo().countryFlags[code] ?: R.drawable.ad }
                         countryNames.clear()
                         countryNames.addAll(listOf("", "", ""))
                         attempts = 0
                         submitted = false
                         totalMarks = correctAttempts
                         timeLeft = 10
-
                     } else {
                         if (!submitted) {
+                            // Handling user's submission
                             submitted = true
                             attempts++
                             correctAttempts = countryNames.countIndexed { index, name ->
-                                name == Data().country_names[countryCodes[index]]
+                                name == CountryInfo().country_names[countryCodes[index]]
                             }
                             totalMarks = correctAttempts
-
-
                         } else {
                             attempts++
                         }
                     }
-                }
-                , modifier = Modifier.width(200.dp),
-
+                },
+                modifier = Modifier.width(200.dp),
                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
-                Text(if ((correctAttempts == 3 || attempts == 3) || timeLeft ==0) "Next" else "Submit", color = Color.White)
+                Text(
+                    if ((correctAttempts == 3 || attempts == 3) || timeLeft == 0) "Next" else "Submit",
+                    color = Color.White
+                )
             }
-
-            // Display total marks obtained by the user
+            // Displaying total marks user got
             Text(
                 text = "Marks: $totalMarks / 3",
                 modifier = Modifier.padding(8.dp),
                 color = Color.White
             )
         }
-    }else{
-        Column(modifier = Modifier
-            .fillMaxHeight()
-            .background(color = Color(44, 64, 83))
-            .padding(top = 35.dp),
+    } else { // Landscape layout
+
+        Column(
+
+            modifier = Modifier
+                .fillMaxHeight()
+                .background(color = Color(44, 64, 83))
+                .padding(top = 35.dp),
             verticalArrangement = Arrangement.SpaceAround,
-            horizontalAlignment = Alignment.CenterHorizontally) {
+            horizontalAlignment = Alignment.CenterHorizontally
 
-            if (Time){
+        ) {
 
+            if (Time) { // Displaying time left if switch is enabled
 
                 LaunchedEffect(key1 = timeLeft) {
+
                     while (timeLeft > 0) {
                         delay(1000L)
                         timeLeft--
                     }
 
-                    if(timeLeft ==0){
+                    if (timeLeft == 0) {
+                        // Handling end of time
                         if (correctAttempts == 3 || attempts == 3) {
-                            // Generate new set of random country codes
-                            val newRandomCountryCodes = Data().countryCodes.shuffled().take(3)
+                            // Reset the values and Generating new values
+                            val newRandomCountryCodes = CountryInfo().countryCodes.shuffled().take(3)
                             countryCodes = newRandomCountryCodes
-                            countryFlags = newRandomCountryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad }
+                            countryFlags = newRandomCountryCodes.map { code -> CountryInfo().countryFlags[code] ?: R.drawable.ad }
                             countryNames.clear()
                             countryNames.addAll(listOf("", "", ""))
                             attempts = 0
                             submitted = false
                             totalMarks = correctAttempts
-
                         } else {
                             if (!submitted) {
+                                // Handling submission
                                 submitted = true
                                 attempts++
                                 correctAttempts = countryNames.countIndexed { index, name ->
-                                    name == Data().country_names[countryCodes[index]]
+                                    name == CountryInfo().country_names[countryCodes[index]]
                                 }
                                 totalMarks = correctAttempts
-
-
                             } else {
                                 attempts++
                             }
                         }
                     }
-
                 }
                 Text(text = "Time left: $timeLeft", color = Color.White)
-
             }
-
+            // Displaying flags and input fields
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
-
             ) {
-
                 countryCodes.forEachIndexed { index, countryCode ->
-                    Row(horizontalArrangement = Arrangement.SpaceEvenly,
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .padding(vertical = 3.dp)
+                            modifier = Modifier.padding(vertical = 3.dp)
                         ) {
-                            Box(modifier = Modifier
-                                .width(150.dp)
-                                .height(120.dp)
-                                .background(color = Color(150, 200, 220), shape = RoundedCornerShape(16.dp)),
-                                contentAlignment = Alignment.Center) {
+                            Box(
+                                modifier = Modifier
+                                    .width(150.dp)
+                                    .height(120.dp)
+                                    .background(color = Color(150, 200, 220), shape = RoundedCornerShape(16.dp)),
+                                contentAlignment = Alignment.Center
+                            ) {
                                 Image(
                                     painter = painterResource(id = countryFlags[index]),
                                     contentDescription = null,
                                     modifier = Modifier.size(100.dp)
                                 )
                             }
-                            val isCorrect = countryNames[index] == Data().country_names[countryCode]
+                            val isCorrect = countryNames[index] == CountryInfo().country_names[countryCode]
                             val isEditable = !submitted || (submitted && !isCorrect && attempts < 3)
 
                             val backgroundColor = when {
@@ -311,6 +332,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                                 else -> Color.Transparent
                             }
 
+                            // Input field for names of the countries
                             OutlinedTextField(
                                 value = countryNames[index],
                                 onValueChange = {
@@ -325,9 +347,10 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                                     .background(color = backgroundColor),
                                 enabled = isEditable
                             )
+                            // Displaying correct country name if submit is incorrect after attempts
                             if (!isCorrect && submitted && attempts == 3) {
                                 Text(
-                                    text = Data().country_names[countryCode] ?: "",
+                                    text = CountryInfo().country_names[countryCode] ?: "",
                                     modifier = Modifier.padding(start = 10.dp),
                                     color = Color.Red
                                 )
@@ -336,57 +359,59 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                     }
                 }
             }
-
+            // Button
             Button(
                 onClick = {
                     if ((correctAttempts == 3 || attempts == 3) || timeLeft == 0) {
-                        // Generate new set of random country codes
-                        val newRandomCountryCodes = Data().countryCodes.shuffled().take(3)
+
+                        // Reset the values and Generating new values
+                        val newRandomCountryCodes = CountryInfo().countryCodes.shuffled().take(3)
                         countryCodes = newRandomCountryCodes
-                        countryFlags = newRandomCountryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad }
+                        countryFlags = newRandomCountryCodes.map { code -> CountryInfo().countryFlags[code] ?: R.drawable.ad }
                         countryNames.clear()
                         countryNames.addAll(listOf("", "", ""))
                         attempts = 0
                         submitted = false
                         totalMarks = correctAttempts
                         timeLeft = 10
-
                     } else {
                         if (!submitted) {
+                            // Handling User's Submit
                             submitted = true
                             attempts++
                             correctAttempts = countryNames.countIndexed { index, name ->
-                                name == Data().country_names[countryCodes[index]]
+                                name == CountryInfo().country_names[countryCodes[index]]
                             }
                             totalMarks = correctAttempts
-
-
                         } else {
                             attempts++
                         }
                     }
-                }
-                , modifier = Modifier
+                },
+                modifier = Modifier
                     .width(200.dp)
-                    .offset( x=-10.dp, y=20.dp),
-
+                    .offset(x = -10.dp, y = 20.dp),
                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
-                Text(if ((correctAttempts == 3 || attempts == 3) || timeLeft ==0) "Next" else "Submit", color = Color.White)
+                Text(
+                    if ((correctAttempts == 3 || attempts == 3) || timeLeft == 0) "Next" else "Submit",
+                    color = Color.White
+                )
             }
-
-            // Display total marks obtained by the user
+            // Displaying total marks user's got
             Text(
                 text = "Marks: $totalMarks / 3",
                 modifier = Modifier
                     .padding(8.dp)
-                    .offset(x=340.dp,y=-320.dp),
+                    .offset(x = 340.dp, y = -320.dp),
+
                 color = Color.White
             )
         }
     }
 }
 
+//  Function to count elements with index
 inline fun <T> Iterable<T>.countIndexed(predicate: (Int, T) -> Boolean): Int {
     var count = 0
     for ((index, element) in this.withIndex()) {
@@ -397,11 +422,3 @@ inline fun <T> Iterable<T>.countIndexed(predicate: (Int, T) -> Boolean): Int {
     return count
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview2() {
-    FlagGuessefinalTheme {
-        val randomCountryCodes = remember { Data().countryCodes.shuffled().take(3) }
-        DisplayFlagsAndInputs(randomCountryCodes,false)
-    }
-}

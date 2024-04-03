@@ -1,5 +1,7 @@
 package com.example.flagguesse_final
 
+//Demo Video Link : https://drive.google.com/file/d/19qi49hSeNf9E5erxWihZjoPCragSwZN4/view?usp=sharing
+
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -26,11 +28,8 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,17 +39,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
-import kotlinx.coroutines.delay
-import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity() { // Activity of MainActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -60,31 +52,41 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MyButtons()
+                    MainFunction() // Calling the MainFunction
                 }
             }
         }
     }
 
     @Composable
-    fun MyButtons() {
-        val orientation = LocalConfiguration.current.orientation
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+    fun MainFunction() {
+        //https://medium.com/@rzmeneghelo/adapt-with-ease-mastering-orientation-changes-in-jetpack-compose-5a298da703d0#:~:text=The%20first%20step%20in%20managing,is%20easily%20accessible%20via%20LocalConfiguration%20.&text=In%20this%20snippet%3A,LocalConfiguration.
+        val orientation = LocalConfiguration.current.orientation // Check the phones orientation whether it is Landscape or Portrait
+
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) { // if orientation is portrait
+
+            var timerEnabled by rememberSaveable { mutableStateOf(false) } // Declaring timerEnabled variable to save the switch state
+
             Column(
-                modifier = Modifier
+
+                modifier = Modifier  // Defining the Columns styling
                     .fillMaxSize()
                     .background(color = Color(150, 174, 196)),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
+
             ) {
 
-                Box(
+                Box( // Defining the Box Styling
+
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(500.dp)
+
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.bgimage),
+                    Image( //Defining Image Styling
+
+                        painter = painterResource(id = R.drawable.bgimage), //Get the id of the image from drawable
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -92,82 +94,96 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                var timerEnabled by rememberSaveable { mutableStateOf(false) }
+                Row( // Declaring Switch Row's Styling
 
-                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
+
                     Switch(
-                        checked = timerEnabled,
+
+                        checked = timerEnabled, //check the switch's state and assign it into timerEnabled variable
+
                         onCheckedChange = { isChecked ->
                             timerEnabled = isChecked
                         },
-                        colors = SwitchDefaults.colors(checkedThumbColor = Color.Blue)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Enable Timer",
 
-                        )
+                        colors = SwitchDefaults.colors(checkedThumbColor = Color.Blue) //Color of the switch's button
+                    )
+                    Spacer(modifier = Modifier.width(8.dp)) //Add a space after the button
+
+                    Text(text = "Enable Timer")  //Timer Switch's Text
                 }
-                Column(
+
+                Column( //Adding a column to add buttons and declaring its styling
 
                     modifier = Modifier
                         .height(150.dp)
                         .width(500.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceAround
+
                 ) {
 
-                    Row(
+                    Row( //First Two buttons Row and its styling
 
                         modifier = Modifier.width(300.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
 
                     ) {
+
+                        // Guess Country Button
                         Button(
                             onClick = {
+                                //Check whether Switch is on or off
                                 if(timerEnabled){
+
                                     val intent = Intent(this@MainActivity, GuessActivity::class.java)
-                                    intent.putExtra("Timer",timerEnabled)
+                                    intent.putExtra("Timer",timerEnabled) // pass the switch's state to other Activities if it is on
                                     startActivity(intent)
                                 }else{
+
                                     val intent =Intent(this@MainActivity,GuessActivity::class.java)
                                     startActivity(intent)
                                 }
                             },
 
-                            colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+                            colors = ButtonDefaults.buttonColors(Color(110, 39, 89)) // Button Color
                         ) {
 
-                            Text(text = "Guess Country", color = Color.White)
+                            Text(text = "Guess The Country", color = Color.White) // Button Text
 
                         }
+
+                        //Guess Hints Button
                         Button(
                             onClick = {
 
                                 if(timerEnabled){
+
                                     val intent = Intent(this@MainActivity, HintActivity::class.java)
-                                    intent.putExtra("Timer",timerEnabled)
+                                    intent.putExtra("Timer",timerEnabled) // pass the switch's state to other Activities if it is on
                                     startActivity(intent)
+
                                 }else{
+
                                     val intent =Intent(this@MainActivity,HintActivity::class.java)
                                     startActivity(intent)
                                 }
                             },
 
-                            colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+                            colors = ButtonDefaults.buttonColors(Color(110, 39, 89)) // Button Color
                         ) {
 
-                            Text(text = "Guess-Hints", color = Color.White)
+                            Text(text = "Guess-Hints", color = Color.White) // Button Text
 
                         }
                     }
 
+                    // Row for second two buttons and styling
                     Row(
                         modifier = Modifier.width(300.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -175,35 +191,41 @@ class MainActivity : ComponentActivity() {
 
                     ) {
 
+                        //Guess Flag button
                         Button(
                             onClick = {
 
                                 if(timerEnabled){
+
                                     val intent = Intent(this@MainActivity, GuessFlagActivity::class.java)
-                                    intent.putExtra("Timer",timerEnabled)
+                                    intent.putExtra("Timer",timerEnabled) // pass the switch's state to other Activities if it is on
                                     startActivity(intent)
                                 }else{
+
                                     val intent =Intent(this@MainActivity,GuessFlagActivity::class.java)
                                     startActivity(intent)
                                 }
                             },
 
-                            colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+                            colors = ButtonDefaults.buttonColors(Color(110, 39, 89)) // Button Color
                         ) {
 
-                            Text(text = "Guess Flag", color = Color.White)
+                            Text(text = "Guess The Flag", color = Color.White) // Button Text
 
                         }
 
+                        //Advanced Level Button
                         Button(
                             onClick = {
 
                                 if(timerEnabled){
+
                                     val intent = Intent(this@MainActivity, AdvanceActivity::class.java)
-                                    intent.putExtra("Timer",timerEnabled)
+                                    intent.putExtra("Timer",timerEnabled) // pass the switch's state to other Activities if it is on
                                     startActivity(intent)
                                 }else{
-                                    val intent =Intent(this@MainActivity,AdvanceActivity::class.java)
+
+                                    val intent =Intent(this@MainActivity,AdvanceActivity::class.java) // Button Color
                                     startActivity(intent)
                                 }
                             },
@@ -211,13 +233,16 @@ class MainActivity : ComponentActivity() {
                             colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                         ) {
 
-                            Text(text = "Advance-Level", color = Color.White)
+                            Text(text = "Advanced Level", color = Color.White) // Button Text
 
                         }
                     }
                 }
             }
-        } else {
+        } else { //If phones orientation is Landscape
+
+            var timerEnabled by rememberSaveable { mutableStateOf(false) }
+
             Row(
                 modifier = Modifier
                     .fillMaxSize()
@@ -238,10 +263,6 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                var timerEnabled by rememberSaveable { mutableStateOf(false) }
-
-
-
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Row(
                         modifier = Modifier
@@ -250,6 +271,7 @@ class MainActivity : ComponentActivity() {
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Switch(
+
                             checked = timerEnabled,
                             onCheckedChange = { isChecked ->
                                 timerEnabled = isChecked
@@ -258,6 +280,7 @@ class MainActivity : ComponentActivity() {
                             colors = SwitchDefaults.colors(checkedThumbColor = Color.Blue)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
+
                         Text(
                             text = "Enable Timer",
 
@@ -271,6 +294,7 @@ class MainActivity : ComponentActivity() {
                             .width(500.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceAround
+
                     ) {
 
                         Row(
@@ -281,12 +305,16 @@ class MainActivity : ComponentActivity() {
 
                         ) {
                             Button(
+
                                 onClick = {
                                     if(timerEnabled){
+
                                         val intent = Intent(this@MainActivity, GuessActivity::class.java)
                                         intent.putExtra("Timer",timerEnabled)
                                         startActivity(intent)
+
                                     }else{
+
                                         val intent =Intent(this@MainActivity,GuessActivity::class.java)
                                         startActivity(intent)
                                     }
@@ -305,10 +333,13 @@ class MainActivity : ComponentActivity() {
                             Button(
                                 onClick = {
                                     if(timerEnabled){
+
                                         val intent = Intent(this@MainActivity, HintActivity::class.java)
                                         intent.putExtra("Timer",timerEnabled)
                                         startActivity(intent)
+
                                     }else{
+
                                         val intent =Intent(this@MainActivity,HintActivity::class.java)
                                         startActivity(intent)
                                     }
@@ -323,6 +354,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         Row(
+
                             modifier = Modifier.width(300.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
@@ -335,13 +367,16 @@ class MainActivity : ComponentActivity() {
                                         val intent = Intent(this@MainActivity, GuessFlagActivity::class.java)
                                         intent.putExtra("Timer",timerEnabled)
                                         startActivity(intent)
+
                                     }else{
+
                                         val intent =Intent(this@MainActivity,GuessFlagActivity::class.java)
                                         startActivity(intent)
                                     }
                                 },
 
                                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+
                             ) {
 
                                 Text(text = "Guess Flag", color = Color.White)
@@ -349,18 +384,23 @@ class MainActivity : ComponentActivity() {
                             }
 
                             Button(
+
                                 onClick = {
                                     if(timerEnabled){
+
                                         val intent = Intent(this@MainActivity, AdvanceActivity::class.java)
                                         intent.putExtra("Timer",timerEnabled)
                                         startActivity(intent)
+
                                     }else{
+
                                         val intent =Intent(this@MainActivity,AdvanceActivity::class.java)
                                         startActivity(intent)
                                     }
                                 },
 
                                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
+
                             ) {
 
                                 Text(text = "Advance-Level", color = Color.White)
@@ -368,16 +408,8 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-
                 }
             }
-        }
-    }
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        FlagGuessefinalTheme {
-            MyButtons()
         }
     }
 }

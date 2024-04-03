@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,8 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -41,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -49,7 +45,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
 import kotlinx.coroutines.delay
 
@@ -92,11 +87,11 @@ class GuessActivity: ComponentActivity() {
 @Composable
 fun RandomFlag(Time:Boolean) {
 
-    val countryCodes = remember { Data().countryCodes } // Get the list of country codes from the Data class
+    val countryCodes = remember { CountryInfo().countryCodes } // Get the list of country codes from the Data class
 
-    val countryFlags = remember{ Data().countryFlags } // Get the map of country flags from the Data class
+    val countryFlags = remember{ CountryInfo().countryFlags } // Get the map of country flags from the Data class
 
-    val countryNameMap = remember { Data().country_names } // Get the map of the country names from the Data class
+    val countryNameMap = remember { CountryInfo().country_names } // Get the map of the country names from the Data class
 
     val countryNames = countryNameMap.values.toList()  //Get the values of the map country_name and convert into a list
 
@@ -120,7 +115,7 @@ fun RandomFlag(Time:Boolean) {
 
 
 
-    val orientation = LocalConfiguration.current.orientation
+    val orientation = LocalConfiguration.current.orientation //https://medium.com/@rzmeneghelo/adapt-with-ease-mastering-orientation-changes-in-jetpack-compose-5a298da703d0#:~:text=The%20first%20step%20in%20managing,is%20easily%20accessible%20via%20LocalConfiguration%20.&text=In%20this%20snippet%3A,LocalConfiguration.
 
     if (orientation == Configuration.ORIENTATION_PORTRAIT){
 

@@ -38,25 +38,24 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
 import kotlinx.coroutines.delay
 
-class HintActivity : ComponentActivity() {
+class HintActivity : ComponentActivity() { // Activity of Hint Activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             FlagGuessefinalTheme {
-                // A surface container using the 'background' color from the theme
+                // A surface container
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val time = intent.getBooleanExtra("Timer",false)
                     println(time)
-                    Hint(time) // call the Hint() composable function
+                    HintActivityfunc(time) // call the HintActivityfunc() composable function
                 }
             }
         }
@@ -64,28 +63,39 @@ class HintActivity : ComponentActivity() {
 }
 
 @Composable
-fun Hint(Time:Boolean) {
-    val countryCodes = remember { Data().countryCodes }
-    val countryFlags = remember { Data().countryFlags }
-    val countryNameMap = remember { Data().country_names }
+fun HintActivityfunc(Time:Boolean) {
 
-    var randomCountryCode by rememberSaveable { mutableStateOf(countryCodes.random()) }
-    var correctCountryName by rememberSaveable { mutableStateOf(countryNameMap[randomCountryCode] ?: "") }
+    val countryCodes = remember { CountryInfo().countryCodes }
 
-    var guessedLetters by rememberSaveable { mutableStateOf(List(correctCountryName.length) { "" }) }
-    var userInput by rememberSaveable { mutableStateOf("") }
-    var message by rememberSaveable { mutableStateOf("") }
-    var incorrectGuesses by rememberSaveable { mutableStateOf(0) }
-    var showNextButton by rememberSaveable { mutableStateOf(false) }
+    val countryFlags = remember { CountryInfo().countryFlags }
+
+    val countryNameMap = remember { CountryInfo().country_names }
+
+    var randomCode by rememberSaveable { mutableStateOf(countryCodes.random()) } //mutable variable of generating random code
+
+    var correct_name by rememberSaveable { mutableStateOf(countryNameMap[randomCode] ?: "") } // mutable variable for correct name
+
+    var letter_guess by rememberSaveable { mutableStateOf(List(correct_name.length) { "" }) } //mutable variable of added letter
+
+    var textInput by rememberSaveable { mutableStateOf("") }
+
+    var message by rememberSaveable { mutableStateOf("") } //mutable variable for message
+
+    var wrongGuess by rememberSaveable { mutableStateOf(0) } //mutable variable for wrong answering
+
+    var nextButton by rememberSaveable { mutableStateOf(false) }
+
 
     val timeValue by remember { mutableStateOf(10) }
 
     var timeLeft by rememberSaveable { mutableStateOf(timeValue) }
 
-    val orientation = LocalConfiguration.current.orientation
-    if (orientation == Configuration.ORIENTATION_PORTRAIT){
+    val orientation = LocalConfiguration.current.orientation //https://medium.com/@rzmeneghelo/adapt-with-ease-mastering-orientation-changes-in-jetpack-compose-5a298da703d0#:~:text=The%20first%20step%20in%20managing,is%20easily%20accessible%20via%20LocalConfiguration%20.&text=In%20this%20snippet%3A,LocalConfiguration.
+
+    if (orientation == Configuration.ORIENTATION_PORTRAIT){ //Potrait Layout
 
         Column(
+
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = Color(44, 64, 83)),
@@ -100,7 +110,7 @@ fun Hint(Time:Boolean) {
                 color = Color.White
             )
 
-            if (Time){
+            if (Time){ // if switch is enable
 
 
                 LaunchedEffect(key1 = timeLeft) {
@@ -109,50 +119,13 @@ fun Hint(Time:Boolean) {
                         timeLeft--
                     }
 
-                    if(timeLeft ==0){
-                        if (showNextButton) {
-                            randomCountryCode = countryCodes.random()
-                            correctCountryName = countryNameMap[randomCountryCode] ?: ""
-                            guessedLetters = List(correctCountryName.length) { "" }
-                            showNextButton = false
-                            message = ""
-                            incorrectGuesses = 0
-                        } else {
-                            if (userInput.length == 1 || timeLeft == 0 || (userInput.length ==0 && timeLeft == 0)) {
-                                val inputLower = userInput.lowercase() // Convert input to lowercase
-                                val nameLower = correctCountryName.lowercase() // Convert country name to lowercase
-                                if (nameLower.contains(inputLower)) {
-                                    for (i in correctCountryName.indices) {
-                                        if (correctCountryName[i].lowercase() == inputLower && guessedLetters[i].isBlank()) {
-                                            guessedLetters = guessedLetters.toMutableList().also { it[i] = userInput }
-                                        }
-                                    }
-                                    if (!guessedLetters.contains("")) {
-                                        message = "Congratulations! You guessed it right!"
-                                        showNextButton = true
-                                        timeLeft =10
-                                    }
-                                } else {
-                                    message = "Try again! Incorrect guess."
-                                    incorrectGuesses++
-                                    if (incorrectGuesses == 3 || timeLeft == 0) {
-                                        message = "Correct answer: $correctCountryName"
-                                        showNextButton = true
-                                        timeLeft =10
-                                    }
-                                }
-
-                            } else {
-                                message = "Please enter a single letter."
-                            }
-                        }
-                    }
-
                 }
                 Text(text = "Time left: $timeLeft", color = Color.White)
 
             }
+
             Box(
+
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
@@ -165,7 +138,7 @@ fun Hint(Time:Boolean) {
                     contentAlignment = Alignment.Center
                     ){
                     Image(
-                        painter = painterResource(id = countryFlags[randomCountryCode] ?: R.drawable.ad),
+                        painter = painterResource(id = countryFlags[randomCode] ?: R.drawable.ad),
                         contentDescription = null,
                         modifier = Modifier.size(200.dp)
                     )
@@ -173,8 +146,8 @@ fun Hint(Time:Boolean) {
             }
             Text(
                 text = buildString {
-                    for (i in correctCountryName.indices) {
-                        append(if (guessedLetters[i].isBlank()) "-" else guessedLetters[i])
+                    for (i in correct_name.indices) {
+                        append(if (letter_guess[i].isBlank()) "-" else letter_guess[i])
                         append(" ")
                     }
                 }, style = TextStyle(fontSize = 25.sp, color = Color.White),
@@ -182,41 +155,42 @@ fun Hint(Time:Boolean) {
                 modifier = Modifier.padding(vertical = 16.dp)
             )
             OutlinedTextField(
-                value = userInput,
-                onValueChange = { userInput = it },
+                value = textInput,
+                onValueChange = { textInput = it },
                 label = { Text(text = "Enter a letter", color = Color.White) },
                 modifier = Modifier.padding(bottom = 16.dp)
             )
+            //Button for submitting
             Button(
                 onClick = {
-                    if (showNextButton) {
-                        randomCountryCode = countryCodes.random()
-                        correctCountryName = countryNameMap[randomCountryCode] ?: ""
-                        guessedLetters = List(correctCountryName.length) { "" }
-                        showNextButton = false
+                    if (nextButton) {
+                        randomCode = countryCodes.random()
+                        correct_name = countryNameMap[randomCode] ?: ""
+                        letter_guess = List(correct_name.length) { "" }
+                        nextButton = false
                         message = ""
-                        incorrectGuesses = 0
+                        wrongGuess = 0
                         timeLeft = 10
                     } else {
-                        if (userInput.length == 1 || timeLeft == 0) {
-                            val inputLower = userInput.lowercase() // Convert input to lowercase
-                            val nameLower = correctCountryName.lowercase() // Convert country name to lowercase
+                        if (textInput.length == 1) {
+                            val inputLower = textInput.lowercase() // Convert input to lowercase
+                            val nameLower = correct_name.lowercase() // Convert country name to lowercase
                             if (nameLower.contains(inputLower)) {
-                                for (i in correctCountryName.indices) {
-                                    if (correctCountryName[i].lowercase() == inputLower && guessedLetters[i].isBlank()) {
-                                        guessedLetters = guessedLetters.toMutableList().also { it[i] = userInput }
+                                for (i in correct_name.indices) {
+                                    if (correct_name[i].lowercase() == inputLower && letter_guess[i].isBlank()) {
+                                        letter_guess = letter_guess.toMutableList().also { it[i] = textInput }
                                     }
                                 }
-                                if (!guessedLetters.contains("")) {
-                                    message = "Congratulations! You guessed it right!"
-                                    showNextButton = true
+                                if (!letter_guess.contains("")) {
+                                    message = "CORRECT! You guessed it right!"
+                                    nextButton = true
                                 }
                             } else {
                                 message = "Try again! Incorrect guess."
-                                incorrectGuesses++
-                                if (incorrectGuesses == 3 || timeLeft == 0) {
-                                    message = "Correct answer: $correctCountryName"
-                                    showNextButton = true
+                                wrongGuess++
+                                if (wrongGuess == 3) {
+                                    message = "Correct answer: $correct_name"
+                                    nextButton = true
                                 }
                             }
                         } else {
@@ -227,11 +201,11 @@ fun Hint(Time:Boolean) {
 
                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
-                Text(text = if (showNextButton || timeLeft == 0) "Next" else "Submit", color = Color.White)
+                Text(text = if (nextButton) "Next" else "Submit", color = Color.White)
             }
             Text(text = message, color = Color.Red)
         }
-    }else{
+    }else{ //Landscape mode
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -248,48 +222,10 @@ fun Hint(Time:Boolean) {
             )
             if (Time){
 
-
                 LaunchedEffect(key1 = timeLeft) {
                     while (timeLeft > 0) {
                         delay(1000L)
                         timeLeft--
-                    }
-
-                    if(timeLeft ==0){
-                        if (showNextButton) {
-                            randomCountryCode = countryCodes.random()
-                            correctCountryName = countryNameMap[randomCountryCode] ?: ""
-                            guessedLetters = List(correctCountryName.length) { "" }
-                            showNextButton = false
-                            message = ""
-                            incorrectGuesses = 0
-                        } else {
-                            if (userInput.length == 1) {
-                                val inputLower = userInput.lowercase() // Convert input to lowercase
-                                val nameLower = correctCountryName.lowercase() // Convert country name to lowercase
-                                if (nameLower.contains(inputLower)) {
-                                    for (i in correctCountryName.indices) {
-                                        if (correctCountryName[i].lowercase() == inputLower && guessedLetters[i].isBlank()) {
-                                            guessedLetters = guessedLetters.toMutableList().also { it[i] = userInput }
-                                        }
-                                    }
-                                    if (!guessedLetters.contains("")) {
-                                        message = "Congratulations! You guessed it right!"
-                                        showNextButton = true
-                                    }
-                                } else {
-                                    message = "Try again! Incorrect guess."
-                                    incorrectGuesses++
-                                    if (incorrectGuesses == 3) {
-                                        message = "Correct answer: $correctCountryName"
-                                        showNextButton = true
-                                    }
-                                }
-                            } else {
-                                message = "Please enter a single letter."
-                            }
-                        }
-
                     }
 
                 }
@@ -311,7 +247,7 @@ fun Hint(Time:Boolean) {
                         contentAlignment = Alignment.Center
                     ){
                         Image(
-                            painter = painterResource(id = countryFlags[randomCountryCode] ?: R.drawable.ad),
+                            painter = painterResource(id = countryFlags[randomCode] ?: R.drawable.ad),
                             contentDescription = null,
                             modifier = Modifier.size(200.dp)
                         )
@@ -321,8 +257,8 @@ fun Hint(Time:Boolean) {
                     verticalArrangement = Arrangement.SpaceEvenly) {
                     Text(
                         text = buildString {
-                            for (i in correctCountryName.indices) {
-                                append(if (guessedLetters[i].isBlank()) "-" else guessedLetters[i])
+                            for (i in correct_name.indices) {
+                                append(if (letter_guess[i].isBlank()) "-" else letter_guess[i])
                                 append(" ")
                             }
                         }, color = Color.White,
@@ -330,42 +266,44 @@ fun Hint(Time:Boolean) {
                         modifier = Modifier.padding(vertical = 16.dp)
                     )
                     OutlinedTextField(
-                        value = userInput,
-                        onValueChange = { userInput = it },
+                        value = textInput,
+                        onValueChange = { textInput = it },
                         label = { Text(text = "Enter a letter",color =Color.White) },
                         modifier = Modifier.padding(bottom = 16.dp)
 
                     )
+                    //Button for submitting
                     Button(
                         onClick = {
-                            if (showNextButton) {
-                                randomCountryCode = countryCodes.random()
-                                correctCountryName = countryNameMap[randomCountryCode] ?: ""
-                                guessedLetters = List(correctCountryName.length) { "" }
-                                showNextButton = false
+                            //reset the values and generate new values
+                            if (nextButton) {
+                                randomCode = countryCodes.random()
+                                correct_name = countryNameMap[randomCode] ?: ""
+                                letter_guess = List(correct_name.length) { "" }
+                                nextButton = false
                                 message = ""
-                                incorrectGuesses = 0
-                                timeLeft = 10
+                                wrongGuess = 0
+                                timeLeft = 10 // reset the time
                             } else {
-                                if (userInput.length == 1) {
-                                    val inputLower = userInput.lowercase() // Convert input to lowercase
-                                    val nameLower = correctCountryName.lowercase() // Convert country name to lowercase
+                                if (textInput.length == 1) {
+                                    val inputLower = textInput.lowercase() // Converting input to lowercase
+                                    val nameLower = correct_name.lowercase() // Converting country name to lowercase
                                     if (nameLower.contains(inputLower)) {
-                                        for (i in correctCountryName.indices) {
-                                            if (correctCountryName[i].lowercase() == inputLower && guessedLetters[i].isBlank()) {
-                                                guessedLetters = guessedLetters.toMutableList().also { it[i] = userInput }
+                                        for (i in correct_name.indices) { //run a for loop through the correct name and check if the entered correct
+                                            if (correct_name[i].lowercase() == inputLower && letter_guess[i].isBlank()) {
+                                                letter_guess = letter_guess.toMutableList().also { it[i] = textInput }
                                             }
                                         }
-                                        if (!guessedLetters.contains("")) {
-                                            message = "Congratulations! You guessed it right!"
-                                            showNextButton = true
+                                        if (!letter_guess.contains("")) {
+                                            message = "CORRECT! You guessed it right!"
+                                            nextButton = true
                                         }
                                     } else {
                                         message = "Try again! Incorrect guess."
-                                        incorrectGuesses++
-                                        if (incorrectGuesses == 3) {
-                                            message = "Correct answer: $correctCountryName"
-                                            showNextButton = true
+                                        wrongGuess++
+                                        if (wrongGuess == 3) {
+                                            message = "Correct answer: $correct_name"
+                                            nextButton = true
                                         }
                                     }
                                 } else {
@@ -376,7 +314,7 @@ fun Hint(Time:Boolean) {
 
                         colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                     ) {
-                        Text(text = if (showNextButton || timeLeft ==0) "Next" else "Submit", color = Color.White)
+                        Text(text = if (nextButton) "Next" else "Submit", color = Color.White)
                     }
                     Text(text = message, color = Color.Red,modifier = Modifier.offset(y=25.dp))
                 }
@@ -385,13 +323,6 @@ fun Hint(Time:Boolean) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview2() {
-    FlagGuessefinalTheme {
-        Hint(true)
-    }
-}
 
 
 

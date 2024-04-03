@@ -1,6 +1,6 @@
 package com.example.flagguesse_final
 
-class Data {
+class CountryInfo {
 
     //This is the list of Country Codes
     val countryCodes = listOf(
