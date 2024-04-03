@@ -105,7 +105,7 @@ class MainActivity : ComponentActivity() {
                         onCheckedChange = { isChecked ->
                             timerEnabled = isChecked
                         },
-                        colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
+                        colors = SwitchDefaults.colors(checkedThumbColor = Color.Blue)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -238,7 +238,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                var timerEnabled by remember { mutableStateOf(false) }
+                var timerEnabled by rememberSaveable { mutableStateOf(false) }
 
 
 
@@ -255,7 +255,7 @@ class MainActivity : ComponentActivity() {
                                 timerEnabled = isChecked
 
                             },
-                            colors = SwitchDefaults.colors(checkedThumbColor = Color.Green)
+                            colors = SwitchDefaults.colors(checkedThumbColor = Color.Blue)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(

@@ -88,20 +88,6 @@ class GuessActivity: ComponentActivity() {
     }
 }
 
-@Composable
-fun BasicCountdownTimer() {
-    var timeLeft by remember { mutableStateOf(10) }
-
-    LaunchedEffect(key1 = timeLeft) {
-        while (timeLeft > 0) {
-            delay(1000L)
-            timeLeft--
-        }
-    }
-
-    Text(text = "Time left: $timeLeft", color = Color.White)
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RandomFlag(Time:Boolean) {
@@ -126,6 +112,11 @@ fun RandomFlag(Time:Boolean) {
 
     var message by rememberSaveable { mutableStateOf("") }
 
+    val timeValue by remember { mutableStateOf(10) }
+
+    var timeLeft by rememberSaveable { mutableStateOf(timeValue) }
+
+
 
 
 
@@ -145,7 +136,32 @@ fun RandomFlag(Time:Boolean) {
             )
 
             if (Time){
-                BasicCountdownTimer()
+
+
+                LaunchedEffect(key1 = timeLeft) {
+                    while (timeLeft > 0) {
+                        delay(1000L)
+                        timeLeft--
+                    }
+
+                    if(timeLeft ==0){
+                        if ((!isAnswered && selectedItem != "Select Country") || timeLeft==0) {
+                            val isCorrect = selectedItem == correctCountryName
+                            message = if (isCorrect) "CORRECT! You Guessed It." else "WRONG! $correctCountryName"
+                            isAnswered = true
+                        } else if ((isAnswered && timeLeft == 0) || (!isAnswered && timeLeft == 0)) {
+                            // Reset variables for the next round
+                            isAnswered = false
+                            message = ""
+                            selectedItem = "Select Country"
+                            randomCountryCode = countryCodes.random()
+                            correctCountryName = countryNameMap[randomCountryCode] ?: ""
+                        }
+                    }
+
+                    }
+                Text(text = "Time left: $timeLeft", color = Color.White)
+
             }
 
             Box(
@@ -200,7 +216,7 @@ fun RandomFlag(Time:Boolean) {
                 onClick = {
                     if (!isAnswered && selectedItem != "Select Country") {
                         val isCorrect = selectedItem == correctCountryName
-                        message = if (isCorrect) "Correct! You Guessed It." else "Wrong! $correctCountryName"
+                        message = if (isCorrect) "CORRECT! You Guessed It." else "WRONG! $correctCountryName"
                         isAnswered = true
                     } else if (isAnswered) {
                         // Reset variables for the next round
@@ -209,6 +225,8 @@ fun RandomFlag(Time:Boolean) {
                         selectedItem = "Select Country"
                         randomCountryCode = countryCodes.random()
                         correctCountryName = countryNameMap[randomCountryCode] ?: ""
+                        timeLeft = 10
+
                     }
                 },
 
@@ -220,7 +238,7 @@ fun RandomFlag(Time:Boolean) {
 
             // Display the correct or incorrect message
 
-            val correctPartColor = if (message.startsWith("Correct")) Color.Green else Color.Red
+            val correctPartColor = if (message.startsWith("CORRECT")) Color.Green else Color.Red
             val incorrectPartColor = Color.Red
 
             val correctPart = message.substringBefore(":").trim()
@@ -230,7 +248,7 @@ fun RandomFlag(Time:Boolean) {
                 .padding(16.dp)
                 .height(70.dp)
                 .offset(y = 170.dp)) {
-                if (message.startsWith("Correct")) {
+                if (message.startsWith("CORRECT")) {
                     Text(
                         text = correctPart,
                         color = correctPartColor,
@@ -238,7 +256,7 @@ fun RandomFlag(Time:Boolean) {
                         style = TextStyle(fontSize = 25.sp)
                     )
                 }
-                if (message.startsWith("Wrong")) {
+                if (message.startsWith("WRONG")) {
                     Text(
                         text = incorrectPart,
                         color = incorrectPartColor,
@@ -261,7 +279,32 @@ fun RandomFlag(Time:Boolean) {
             )
 
             if (Time){
-                BasicCountdownTimer()
+
+
+                LaunchedEffect(key1 = timeLeft) {
+                    while (timeLeft > 0) {
+                        delay(1000L)
+                        timeLeft--
+                    }
+
+                    if(timeLeft ==0){
+                        if ((!isAnswered && selectedItem != "Select Country") || timeLeft==0) {
+                            val isCorrect = selectedItem == correctCountryName
+                            message = if (isCorrect) "CORRECT! You Guessed It." else "WRONG! $correctCountryName"
+                            isAnswered = true
+                        } else if ((isAnswered && timeLeft == 0) || (!isAnswered && timeLeft == 0)) {
+                            // Reset variables for the next round
+                            isAnswered = false
+                            message = ""
+                            selectedItem = "Select Country"
+                            randomCountryCode = countryCodes.random()
+                            correctCountryName = countryNameMap[randomCountryCode] ?: ""
+                        }
+                    }
+
+                }
+                Text(text = "Time left: $timeLeft", color = Color.White)
+
             }
 
             Row(
@@ -318,7 +361,7 @@ fun RandomFlag(Time:Boolean) {
                                 onClick = {
                                     if (!isAnswered && selectedItem != "Select Country") {
                                         val isCorrect = selectedItem == correctCountryName
-                                        message = if (isCorrect) "Correct! You Guessed It." else "Wrong! $correctCountryName"
+                                        message = if (isCorrect) "CORRECT! You Guessed It." else "WRONG! $correctCountryName"
                                         isAnswered = true
                                     } else if (isAnswered) {
                                         // Reset variables for the next round
@@ -327,6 +370,7 @@ fun RandomFlag(Time:Boolean) {
                                         selectedItem = "Select Country"
                                         randomCountryCode = countryCodes.random()
                                         correctCountryName = countryNameMap[randomCountryCode] ?: ""
+                                        timeLeft = 10
                                     }
                                 },
 
@@ -338,7 +382,7 @@ fun RandomFlag(Time:Boolean) {
 
                             // Display the correct or incorrect message
 
-                            val correctPartColor = if (message.startsWith("Correct")) Color.Green else Color.Red
+                            val correctPartColor = if (message.startsWith("CORRECT")) Color.Green else Color.Red
                             val incorrectPartColor = Color.Red
 
                             val correctPart = message.substringBefore(":").trim()
@@ -348,7 +392,7 @@ fun RandomFlag(Time:Boolean) {
                                 .padding(16.dp)
                                 .height(70.dp)
                                 .offset(y = 170.dp)) {
-                                if (message.startsWith("Correct")) {
+                                if (message.startsWith("CORRECT")) {
                                     Text(
                                         text = correctPart,
                                         color = correctPartColor,
@@ -356,7 +400,7 @@ fun RandomFlag(Time:Boolean) {
                                         style = TextStyle(fontSize = 25.sp)
                                     )
                                 }
-                                if (message.startsWith("Wrong")) {
+                                if (message.startsWith("WRONG")) {
                                     Text(
                                         text = incorrectPart,
                                         color = incorrectPartColor,

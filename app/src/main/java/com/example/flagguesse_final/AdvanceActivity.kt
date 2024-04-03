@@ -84,7 +84,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
         ) {
 
             if (Time){
-                BasicCountdownTimer()
+//                BasicCountdownTimer(10)
             }
             countryCodes.forEachIndexed { index, countryCode ->
                 Column(
@@ -188,7 +188,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
             horizontalAlignment = Alignment.CenterHorizontally) {
 
             if (Time){
-                BasicCountdownTimer()
+//                BasicCountdownTimer()
             }
 
             Row(

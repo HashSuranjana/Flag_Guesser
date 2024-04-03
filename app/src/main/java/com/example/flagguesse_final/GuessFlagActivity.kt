@@ -100,7 +100,7 @@ fun GuessFlagGame(Time:Boolean) {
             )
 
             if (Time){
-                BasicCountdownTimer()
+//                BasicCountdownTimer()
             }
 
             if (shuffledFlags.isEmpty()) { // Check if shuffled flags list is empty
@@ -213,7 +213,7 @@ fun GuessFlagGame(Time:Boolean) {
             )
 
             if (Time){
-                BasicCountdownTimer()
+//                BasicCountdownTimer()
             }
 
 

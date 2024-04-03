@@ -95,7 +95,7 @@ fun Hint(Time:Boolean) {
             )
 
             if (Time){
-                BasicCountdownTimer()
+//                BasicCountdownTimer()
             }
             Box(
                 modifier = Modifier
@@ -191,7 +191,7 @@ fun Hint(Time:Boolean) {
                 color = Color.White
             )
             if (Time){
-                BasicCountdownTimer()
+//                BasicCountdownTimer()
             }
             Row(horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
