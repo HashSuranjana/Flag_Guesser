@@ -145,11 +145,11 @@ fun RandomFlag(Time:Boolean) {
                     }
 
                     if(timeLeft ==0){
-                        if ((!isAnswered && selectedItem != "Select Country") || timeLeft==0) {
+                        if ((!isAnswered && selectedItem != "Select Country")) {
                             val isCorrect = selectedItem == correctCountryName
                             message = if (isCorrect) "CORRECT! You Guessed It." else "WRONG! $correctCountryName"
                             isAnswered = true
-                        } else if ((isAnswered && timeLeft == 0) || (!isAnswered && timeLeft == 0)) {
+                        } else if ((isAnswered) || (!isAnswered )) {
                             // Reset variables for the next round
                             isAnswered = false
                             message = ""

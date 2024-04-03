@@ -26,6 +26,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +41,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
+import kotlinx.coroutines.delay
 
 class AdvanceActivity : ComponentActivity() {
 
@@ -72,6 +74,10 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
     var submitted by rememberSaveable { mutableStateOf(false) }
     var totalMarks by rememberSaveable { mutableStateOf(0) }
 
+    val timeValue by remember { mutableStateOf(10) }
+
+    var timeLeft by rememberSaveable { mutableStateOf(timeValue) }
+
     val orientation = LocalConfiguration.current.orientation
 
     if (orientation == Configuration.ORIENTATION_PORTRAIT){
@@ -84,7 +90,45 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
         ) {
 
             if (Time){
-//                BasicCountdownTimer(10)
+
+
+                LaunchedEffect(key1 = timeLeft) {
+                    while (timeLeft > 0) {
+                        delay(1000L)
+                        timeLeft--
+                    }
+
+                    if(timeLeft ==0){
+                        if (correctAttempts == 3 || attempts == 3) {
+                            // Generate new set of random country codes
+                            val newRandomCountryCodes = Data().countryCodes.shuffled().take(3)
+                            countryCodes = newRandomCountryCodes
+                            countryFlags = newRandomCountryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad }
+                            countryNames.clear()
+                            countryNames.addAll(listOf("", "", ""))
+                            attempts = 0
+                            submitted = false
+                            totalMarks = correctAttempts
+
+                        } else {
+                            if (!submitted) {
+                                submitted = true
+                                attempts++
+                                correctAttempts = countryNames.countIndexed { index, name ->
+                                    name == Data().country_names[countryCodes[index]]
+                                }
+                                totalMarks = correctAttempts
+
+
+                            } else {
+                                attempts++
+                            }
+                        }
+                    }
+
+                }
+                Text(text = "Time left: $timeLeft", color = Color.White)
+
             }
             countryCodes.forEachIndexed { index, countryCode ->
                 Column(
@@ -139,7 +183,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
 
             Button(
                 onClick = {
-                    if (correctAttempts == 3 || attempts == 3) {
+                    if ((correctAttempts == 3 || attempts == 3) || timeLeft == 0) {
                         // Generate new set of random country codes
                         val newRandomCountryCodes = Data().countryCodes.shuffled().take(3)
                         countryCodes = newRandomCountryCodes
@@ -149,6 +193,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                         attempts = 0
                         submitted = false
                         totalMarks = correctAttempts
+                        timeLeft = 10
 
                     } else {
                         if (!submitted) {
@@ -169,7 +214,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
 
                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
-                Text(if (correctAttempts == 3 || attempts == 3) "Next" else "Submit", color = Color.White)
+                Text(if ((correctAttempts == 3 || attempts == 3) || timeLeft ==0) "Next" else "Submit", color = Color.White)
             }
 
             // Display total marks obtained by the user
@@ -188,7 +233,45 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
             horizontalAlignment = Alignment.CenterHorizontally) {
 
             if (Time){
-//                BasicCountdownTimer()
+
+
+                LaunchedEffect(key1 = timeLeft) {
+                    while (timeLeft > 0) {
+                        delay(1000L)
+                        timeLeft--
+                    }
+
+                    if(timeLeft ==0){
+                        if (correctAttempts == 3 || attempts == 3) {
+                            // Generate new set of random country codes
+                            val newRandomCountryCodes = Data().countryCodes.shuffled().take(3)
+                            countryCodes = newRandomCountryCodes
+                            countryFlags = newRandomCountryCodes.map { code -> Data().countryFlags[code] ?: R.drawable.ad }
+                            countryNames.clear()
+                            countryNames.addAll(listOf("", "", ""))
+                            attempts = 0
+                            submitted = false
+                            totalMarks = correctAttempts
+
+                        } else {
+                            if (!submitted) {
+                                submitted = true
+                                attempts++
+                                correctAttempts = countryNames.countIndexed { index, name ->
+                                    name == Data().country_names[countryCodes[index]]
+                                }
+                                totalMarks = correctAttempts
+
+
+                            } else {
+                                attempts++
+                            }
+                        }
+                    }
+
+                }
+                Text(text = "Time left: $timeLeft", color = Color.White)
+
             }
 
             Row(
@@ -256,7 +339,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
 
             Button(
                 onClick = {
-                    if (correctAttempts == 3 || attempts == 3) {
+                    if ((correctAttempts == 3 || attempts == 3) || timeLeft == 0) {
                         // Generate new set of random country codes
                         val newRandomCountryCodes = Data().countryCodes.shuffled().take(3)
                         countryCodes = newRandomCountryCodes
@@ -266,6 +349,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                         attempts = 0
                         submitted = false
                         totalMarks = correctAttempts
+                        timeLeft = 10
 
                     } else {
                         if (!submitted) {
@@ -288,7 +372,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
 
                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
-                Text(if (correctAttempts == 3 || attempts == 3) "Next" else "Submit", color = Color.White)
+                Text(if ((correctAttempts == 3 || attempts == 3) || timeLeft ==0) "Next" else "Submit", color = Color.White)
             }
 
             // Display total marks obtained by the user

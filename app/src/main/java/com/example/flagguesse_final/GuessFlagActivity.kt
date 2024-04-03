@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
+import kotlinx.coroutines.delay
 
 class GuessFlagActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +81,10 @@ fun GuessFlagGame(Time:Boolean) {
 
     val remainingFlags = rememberSaveable { flagIds.filterNot { it == countryflag } } // List of remaining flag image resource ids
 
+    val timeValue by remember { mutableStateOf(10) }
+
+    var timeLeft by rememberSaveable { mutableStateOf(timeValue) }
+
 
     val orientation = LocalConfiguration.current.orientation
 
@@ -100,7 +106,30 @@ fun GuessFlagGame(Time:Boolean) {
             )
 
             if (Time){
-//                BasicCountdownTimer()
+
+
+                LaunchedEffect(key1 = timeLeft) {
+                    while (timeLeft > 0) {
+                        delay(1000L)
+                        timeLeft--
+                    }
+
+
+                    if (selectedFlagIndex != null) { // Check if a flag is selected
+                        isSubmitted = true // Set submitted state
+                        val selectedCountryCode =
+                            Data().countryCodes.find { code -> // Find country code corresponding to selected flag
+                                Data().countryFlags[code] == shuffledFlags[selectedFlagIndex!!]
+                            }
+                        isCorrect =
+                            selectedCountryCode == countryCode // Check if selected country code matches current country code
+                    }
+
+
+
+                }
+                Text(text = "Time left: $timeLeft", color = Color.White)
+
             }
 
             if (shuffledFlags.isEmpty()) { // Check if shuffled flags list is empty
@@ -143,7 +172,7 @@ fun GuessFlagGame(Time:Boolean) {
                 )
             }
 
-            if (isSubmitted) { // Check if guess is submitted
+            if (isSubmitted || timeLeft == 0) { // Check if guess is submitted
                 val resultText =
                     if (isCorrect == true) "CORRECT!" else "WRONG!" // Define result text
                 Text(
@@ -156,7 +185,7 @@ fun GuessFlagGame(Time:Boolean) {
                 )
             }
 
-            if (isSubmitted) { // Check if guess is submitted
+            if (isSubmitted || timeLeft == 0) { // Check if guess is submitted
                 Button(
                     onClick = {
                         isSubmitted = false // Reset submitted state
@@ -169,6 +198,7 @@ fun GuessFlagGame(Time:Boolean) {
                             ?: R.drawable.ad // Get the flag image resource id
                         selectedFlagIndex = null // Reset selected flag index
                         shuffledFlags = emptyList() // Clear shuffled flags list
+                        timeLeft = 10
                     }
                 ) {
                     Text(text = "Next", color = Color.White) // Display "Next" button
@@ -176,7 +206,7 @@ fun GuessFlagGame(Time:Boolean) {
             } else {
                 Button(
                     onClick = {
-                        if (selectedFlagIndex != null) { // Check if a flag is selected
+                        if (selectedFlagIndex != null || timeLeft == 0) { // Check if a flag is selected
                             isSubmitted = true // Set submitted state
                             val selectedCountryCode =
                                 Data().countryCodes.find { code -> // Find country code corresponding to selected flag
@@ -213,7 +243,29 @@ fun GuessFlagGame(Time:Boolean) {
             )
 
             if (Time){
-//                BasicCountdownTimer()
+
+
+                LaunchedEffect(key1 = timeLeft) {
+                    while (timeLeft > 0) {
+                        delay(1000L)
+                        timeLeft--
+                    }
+
+                    if(timeLeft ==0){
+                        if (selectedFlagIndex != null) { // Check if a flag is selected
+                            isSubmitted = true // Set submitted state
+                            val selectedCountryCode =
+                                Data().countryCodes.find { code -> // Find country code corresponding to selected flag
+                                    Data().countryFlags[code] == shuffledFlags[selectedFlagIndex!!]
+                                }
+                            isCorrect =
+                                selectedCountryCode == countryCode // Check if selected country code matches current country code
+                        }
+                    }
+
+                }
+                Text(text = "Time left: $timeLeft", color = Color.White)
+
             }
 
 
@@ -264,7 +316,7 @@ fun GuessFlagGame(Time:Boolean) {
                 }
             }
 
-            if (isSubmitted) { // Check if guess is submitted
+            if (isSubmitted || timeLeft == 0) { // Check if guess is submitted
                 val resultText =
                     if (isCorrect == true) "CORRECT!" else "WRONG!" // Define result text
                 Text(
@@ -277,7 +329,7 @@ fun GuessFlagGame(Time:Boolean) {
                 )
             }
 
-            if (isSubmitted) { // Check if guess is submitted
+            if (isSubmitted || timeLeft == 0) { // Check if guess is submitted
                 Button(modifier = Modifier.width(200.dp),
                     onClick = {
                         isSubmitted = false // Reset submitted state
@@ -290,6 +342,7 @@ fun GuessFlagGame(Time:Boolean) {
                             ?: R.drawable.ad // Get the flag image resource id
                         selectedFlagIndex = null // Reset selected flag index
                         shuffledFlags = emptyList() // Clear shuffled flags list
+                        timeLeft = 10
                     },
                     colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                 ) {
@@ -298,7 +351,7 @@ fun GuessFlagGame(Time:Boolean) {
             } else {
                 Button(
                     onClick = {
-                        if (selectedFlagIndex != null) { // Check if a flag is selected
+                        if (selectedFlagIndex != null || timeLeft == 0) { // Check if a flag is selected
                             isSubmitted = true // Set submitted state
                             val selectedCountryCode =
                                 Data().countryCodes.find { code -> // Find country code corresponding to selected flag

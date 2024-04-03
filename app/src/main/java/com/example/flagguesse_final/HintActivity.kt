@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flagguesse_final.ui.theme.FlagGuessefinalTheme
+import kotlinx.coroutines.delay
 
 class HintActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +78,10 @@ fun Hint(Time:Boolean) {
     var incorrectGuesses by rememberSaveable { mutableStateOf(0) }
     var showNextButton by rememberSaveable { mutableStateOf(false) }
 
+    val timeValue by remember { mutableStateOf(10) }
+
+    var timeLeft by rememberSaveable { mutableStateOf(timeValue) }
+
     val orientation = LocalConfiguration.current.orientation
     if (orientation == Configuration.ORIENTATION_PORTRAIT){
 
@@ -95,7 +101,56 @@ fun Hint(Time:Boolean) {
             )
 
             if (Time){
-//                BasicCountdownTimer()
+
+
+                LaunchedEffect(key1 = timeLeft) {
+                    while (timeLeft > 0) {
+                        delay(1000L)
+                        timeLeft--
+                    }
+
+                    if(timeLeft ==0){
+                        if (showNextButton) {
+                            randomCountryCode = countryCodes.random()
+                            correctCountryName = countryNameMap[randomCountryCode] ?: ""
+                            guessedLetters = List(correctCountryName.length) { "" }
+                            showNextButton = false
+                            message = ""
+                            incorrectGuesses = 0
+                        } else {
+                            if (userInput.length == 1 || timeLeft == 0 || (userInput.length ==0 && timeLeft == 0)) {
+                                val inputLower = userInput.lowercase() // Convert input to lowercase
+                                val nameLower = correctCountryName.lowercase() // Convert country name to lowercase
+                                if (nameLower.contains(inputLower)) {
+                                    for (i in correctCountryName.indices) {
+                                        if (correctCountryName[i].lowercase() == inputLower && guessedLetters[i].isBlank()) {
+                                            guessedLetters = guessedLetters.toMutableList().also { it[i] = userInput }
+                                        }
+                                    }
+                                    if (!guessedLetters.contains("")) {
+                                        message = "Congratulations! You guessed it right!"
+                                        showNextButton = true
+                                        timeLeft =10
+                                    }
+                                } else {
+                                    message = "Try again! Incorrect guess."
+                                    incorrectGuesses++
+                                    if (incorrectGuesses == 3 || timeLeft == 0) {
+                                        message = "Correct answer: $correctCountryName"
+                                        showNextButton = true
+                                        timeLeft =10
+                                    }
+                                }
+
+                            } else {
+                                message = "Please enter a single letter."
+                            }
+                        }
+                    }
+
+                }
+                Text(text = "Time left: $timeLeft", color = Color.White)
+
             }
             Box(
                 modifier = Modifier
@@ -129,7 +184,7 @@ fun Hint(Time:Boolean) {
             OutlinedTextField(
                 value = userInput,
                 onValueChange = { userInput = it },
-                label = { Text(text = "Enter a letter") },
+                label = { Text(text = "Enter a letter", color = Color.White) },
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             Button(
@@ -141,6 +196,7 @@ fun Hint(Time:Boolean) {
                         showNextButton = false
                         message = ""
                         incorrectGuesses = 0
+                        timeLeft = 10
                     } else {
                         if (userInput.length == 1) {
                             val inputLower = userInput.lowercase() // Convert input to lowercase
@@ -171,7 +227,7 @@ fun Hint(Time:Boolean) {
 
                 colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
             ) {
-                Text(text = if (showNextButton) "Next" else "Submit", color = Color.White)
+                Text(text = if (showNextButton || timeLeft == 0) "Next" else "Submit", color = Color.White)
             }
             Text(text = message, color = Color.Red)
         }
@@ -191,7 +247,54 @@ fun Hint(Time:Boolean) {
                 color = Color.White
             )
             if (Time){
-//                BasicCountdownTimer()
+
+
+                LaunchedEffect(key1 = timeLeft) {
+                    while (timeLeft > 0) {
+                        delay(1000L)
+                        timeLeft--
+                    }
+
+                    if(timeLeft ==0){
+                        if (showNextButton) {
+                            randomCountryCode = countryCodes.random()
+                            correctCountryName = countryNameMap[randomCountryCode] ?: ""
+                            guessedLetters = List(correctCountryName.length) { "" }
+                            showNextButton = false
+                            message = ""
+                            incorrectGuesses = 0
+                        } else {
+                            if (userInput.length == 1) {
+                                val inputLower = userInput.lowercase() // Convert input to lowercase
+                                val nameLower = correctCountryName.lowercase() // Convert country name to lowercase
+                                if (nameLower.contains(inputLower)) {
+                                    for (i in correctCountryName.indices) {
+                                        if (correctCountryName[i].lowercase() == inputLower && guessedLetters[i].isBlank()) {
+                                            guessedLetters = guessedLetters.toMutableList().also { it[i] = userInput }
+                                        }
+                                    }
+                                    if (!guessedLetters.contains("")) {
+                                        message = "Congratulations! You guessed it right!"
+                                        showNextButton = true
+                                    }
+                                } else {
+                                    message = "Try again! Incorrect guess."
+                                    incorrectGuesses++
+                                    if (incorrectGuesses == 3) {
+                                        message = "Correct answer: $correctCountryName"
+                                        showNextButton = true
+                                    }
+                                }
+                            } else {
+                                message = "Please enter a single letter."
+                            }
+                        }
+
+                    }
+
+                }
+                Text(text = "Time left: $timeLeft", color = Color.White)
+
             }
             Row(horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
@@ -242,6 +345,7 @@ fun Hint(Time:Boolean) {
                                 showNextButton = false
                                 message = ""
                                 incorrectGuesses = 0
+                                timeLeft = 10
                             } else {
                                 if (userInput.length == 1) {
                                     val inputLower = userInput.lowercase() // Convert input to lowercase
@@ -272,7 +376,7 @@ fun Hint(Time:Boolean) {
 
                         colors = ButtonDefaults.buttonColors(Color(110, 39, 89))
                     ) {
-                        Text(text = if (showNextButton) "Next" else "Submit", color = Color.White)
+                        Text(text = if (showNextButton || timeLeft ==0) "Next" else "Submit", color = Color.White)
                     }
                     Text(text = message, color = Color.Red,modifier = Modifier.offset(y=25.dp))
                 }
