@@ -177,7 +177,7 @@ fun Hint(Time:Boolean) {
                         append(if (guessedLetters[i].isBlank()) "-" else guessedLetters[i])
                         append(" ")
                     }
-                }, style = TextStyle(fontSize = 25.sp),
+                }, style = TextStyle(fontSize = 25.sp, color = Color.White),
 
                 modifier = Modifier.padding(vertical = 16.dp)
             )
@@ -198,7 +198,7 @@ fun Hint(Time:Boolean) {
                         incorrectGuesses = 0
                         timeLeft = 10
                     } else {
-                        if (userInput.length == 1) {
+                        if (userInput.length == 1 || timeLeft == 0) {
                             val inputLower = userInput.lowercase() // Convert input to lowercase
                             val nameLower = correctCountryName.lowercase() // Convert country name to lowercase
                             if (nameLower.contains(inputLower)) {
@@ -214,7 +214,7 @@ fun Hint(Time:Boolean) {
                             } else {
                                 message = "Try again! Incorrect guess."
                                 incorrectGuesses++
-                                if (incorrectGuesses == 3) {
+                                if (incorrectGuesses == 3 || timeLeft == 0) {
                                     message = "Correct answer: $correctCountryName"
                                     showNextButton = true
                                 }
@@ -332,7 +332,7 @@ fun Hint(Time:Boolean) {
                     OutlinedTextField(
                         value = userInput,
                         onValueChange = { userInput = it },
-                        label = { Text(text = "Enter a letter") },
+                        label = { Text(text = "Enter a letter",color =Color.White) },
                         modifier = Modifier.padding(bottom = 16.dp)
 
                     )

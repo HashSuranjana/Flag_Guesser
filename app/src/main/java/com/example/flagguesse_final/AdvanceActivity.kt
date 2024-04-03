@@ -164,7 +164,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                                 countryNames[index] = it
                             }
                         },
-                        label = { Text("Type Country Name") },
+                        label = { Text("Type Country Name", color = Color.White) },
                         modifier = Modifier
                             .padding(top = 16.dp)
                             .width(300.dp)
@@ -318,7 +318,7 @@ fun DisplayFlagsAndInputs(randomCountryCodes: List<String>,Time:Boolean) {
                                         countryNames[index] = it
                                     }
                                 },
-                                label = { Text("Type Country Name") },
+                                label = { Text("Type Country Name", color = Color.White) },
                                 modifier = Modifier
                                     .padding(top = 16.dp)
                                     .width(200.dp)
